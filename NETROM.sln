@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37203.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartShoppingAssistant.DataAccess", "SmartShoppingAssistant.DataAccess\SmartShoppingAssistant.DataAccess.csproj", "{292730F9-FFFA-47D7-8523-3D56C9A5C26A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartShoppingAssistant.Api", "SmartShoppingAssistant.Api\SmartShoppingAssistant.Api.csproj", "{21DF463E-B500-35CA-21D5-43FB300E16F7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{292730F9-FFFA-47D7-8523-3D56C9A5C26A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{292730F9-FFFA-47D7-8523-3D56C9A5C26A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{292730F9-FFFA-47D7-8523-3D56C9A5C26A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{292730F9-FFFA-47D7-8523-3D56C9A5C26A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21DF463E-B500-35CA-21D5-43FB300E16F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21DF463E-B500-35CA-21D5-43FB300E16F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21DF463E-B500-35CA-21D5-43FB300E16F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21DF463E-B500-35CA-21D5-43FB300E16F7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8FECAA82-3017-4563-929C-F276004BE5AF}
+	EndGlobalSection
+EndGlobal
