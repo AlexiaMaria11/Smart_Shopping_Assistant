@@ -27,10 +27,15 @@ namespace SmartShoppingAssistant.DataAccess.Configurations
 
             builder.HasOne(p => p.Product)
                 .WithMany(pr=>pr.Promotions)
-                .HasForeignKey(p => p.ProductId);
+                .HasForeignKey(p => p.ProductId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+
             builder.HasOne(p=>p.Category)
                 .WithMany(pr=>pr.Promotions)
-                .HasForeignKey(p=>p.CategoryId);
+                .HasForeignKey(p=>p.CategoryId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

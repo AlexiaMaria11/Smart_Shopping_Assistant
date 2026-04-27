@@ -26,9 +26,9 @@ namespace SmartShoppingAssistant.DataAccess.Configurations
             builder.Property(p => p.ImageUrl)
                 .HasMaxLength(500);
 
-            builder.HasMany(p => p.ProductCategories)
-                .WithOne(pc => pc.Product)
-                .HasForeignKey(pc => pc.ProductId);
+            builder.HasMany(p => p.Categories)
+                .WithMany(c => c.Products)
+                .UsingEntity(j => j.ToTable("ProductCategories"));
         }
     }
 }

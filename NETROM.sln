@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartShoppingAssistant.Data
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartShoppingAssistant.Api", "SmartShoppingAssistant.Api\SmartShoppingAssistant.Api.csproj", "{21DF463E-B500-35CA-21D5-43FB300E16F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartShoppingAssistant.BusinessLogic", "SmartShoppingAssistant.BusinessLogic\SmartShoppingAssistant.BusinessLogic.csproj", "{A15C1720-F538-4548-8A40-A927F72D4B3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{21DF463E-B500-35CA-21D5-43FB300E16F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21DF463E-B500-35CA-21D5-43FB300E16F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21DF463E-B500-35CA-21D5-43FB300E16F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A15C1720-F538-4548-8A40-A927F72D4B3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A15C1720-F538-4548-8A40-A927F72D4B3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A15C1720-F538-4548-8A40-A927F72D4B3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A15C1720-F538-4548-8A40-A927F72D4B3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,9 +8,16 @@ public class SmartShoppingAssistantDbContext(DbContextOptions<SmartShoppingAssis
 {
     public DbSet<Product> Products { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
-    public DbSet<ProductCategory> ProductCategories { get; set; } = null!;
     public DbSet<CartItem> CartItems { get; set; } = null!;
     public DbSet<Promotion> Promotions { get; set; } = null!;
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer("YourConnectionString");
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

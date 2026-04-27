@@ -15,7 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\SmartShoppingAssistant.BusinessLogic\SmartShoppingAssistant.BusinessLogic.csproj" />
+    <ProjectReference Include="..\SmartShoppingAssistant.DataAccess\SmartShoppingAssistant.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

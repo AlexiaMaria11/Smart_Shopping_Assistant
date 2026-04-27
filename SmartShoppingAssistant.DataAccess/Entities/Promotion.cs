@@ -1,19 +1,7 @@
-﻿namespace SmartShoppingAssistant.DataAccess.Entities
+﻿using SmartShoppingAssistant.DataAccess.Entities.Enums;
+
+namespace SmartShoppingAssistant.DataAccess.Entities
 {
-    public enum PromotionType
-    {
-        Percentage = 0,
-        FixedAmount = 1,
-        BuyXGetY = 2
-    }
-
-    public enum PromotionReward
-    {
-        Discount = 0,
-        FreeItem = 1,
-        LoyaltyPoints = 2
-    }
-
     public class Promotion
     {
         public int Id { get; set; }
