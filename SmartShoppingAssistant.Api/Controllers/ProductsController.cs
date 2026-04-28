@@ -10,7 +10,7 @@ namespace SmartShoppingAssistant.Api.Controllers
     {
 
         [HttpGet]
-        public async Task<ActionResult<List<ProductGetDTO>>> GetAll([FromQuery] string? name, [FromQuery] int? categoryId, [FromQuery] decimal? minPrice, [FromQuery] decimal? maxPrice)
+        public async Task<ActionResult<List<ProductGetDTO>>> GetAll(string? name, int? categoryId, decimal? minPrice, decimal? maxPrice)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace SmartShoppingAssistant.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProductGetDTO>> Create([FromBody] ProductCreateDTO dto)
+        public async Task<ActionResult<ProductGetDTO>> Create(ProductCreateDTO dto)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace SmartShoppingAssistant.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ProductGetDTO>> Update(int id, [FromBody] ProductUpdateDTO dto)
+        public async Task<ActionResult<ProductGetDTO>> Update(int id, ProductUpdateDTO dto)
         {
             try
             {
