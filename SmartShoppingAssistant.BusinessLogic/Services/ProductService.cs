@@ -1,12 +1,13 @@
-﻿using SmartShoppingAssistant.BusinessLogic.DTOs;
+﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
+using SmartShoppingAssistant.BusinessLogic.Mappers;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
 using SmartShoppingAssistant.DataAccess.Entities;
 using SmartShoppingAssistant.DataAccess.Repositories;
-using SmartShoppingAssistant.BusinessLogic.Mappers;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SmartShoppingAssistant.BusinessLogic.Services
 {
-    public class ProductService(IRepository<Product> productRepository) : IProductService
+    public class ProductService(IRepository<Product> productRepository, IRepository<Category> categoryRepository) : IProductService
     {
         public async Task<ProductGetDTO> GetByIdAsync(int id)
         {
@@ -32,9 +33,20 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
         {
             var entity = ProductMapper.ToEntity(dto);
 
-            var added = await productRepository.AddAsync(entity);
+            foreach (var categoryId in dto.CategoryIds)
+            {
+                var category = await categoryRepository.GetByIdAsync(categoryId);
+                if (category != null)
+                {
+                    entity.Categories.Add(category);
+                }
+                else
+                {
+                    throw new Exception($"Category with ID {categoryId} not found");
+                }
+            }   
 
-            return ProductMapper.ToGetDTO(added);
+            return ProductMapper.ToGetDTO(entity);
         }
 
         public async Task<ProductGetDTO> UpdateAsync(int id, ProductUpdateDTO dto)
@@ -44,6 +56,33 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
             if (product == null)
             {
                 throw new Exception("Product not found");
+            }
+
+            IEnumerable<int> onlyInOld = product.Categories.Select(c => c.Id).Except(dto.CategoryIds);
+
+            foreach (var categoryId in onlyInOld)
+            {
+                var category = product.Categories.FirstOrDefault(c => c.Id == categoryId);
+                if (category != null)
+                {
+                    product.Categories.Remove(category);
+                }
+            }
+
+            foreach (var categoryId in dto.CategoryIds)
+            {
+                var category = await categoryRepository.GetByIdAsync(categoryId);
+                if (category != null)
+                {
+                    if (!product.Categories.Any(c => c.Id == categoryId))
+                    {
+                        product.Categories.Add(category);
+                    }
+                }
+                else
+                {
+                    throw new Exception($"Category with ID {categoryId} not found");
+                }
             }
 
             ProductMapper.UpdateEntity(product, dto);

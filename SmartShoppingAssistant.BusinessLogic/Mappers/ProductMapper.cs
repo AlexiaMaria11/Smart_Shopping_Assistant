@@ -1,4 +1,4 @@
-﻿using SmartShoppingAssistant.BusinessLogic.DTOs;
+﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 using SmartShoppingAssistant.DataAccess.Entities;
 
 namespace SmartShoppingAssistant.BusinessLogic.Mappers
@@ -13,7 +13,8 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 Name = product.Name,
                 Description = product.Description,
                 ImageUrl = product.ImageUrl,
-                Price = product.Price
+                Price = product.Price,
+                CategoryIds = product.Categories?.Select(c => c.Id).ToList() ?? new List<int>() { 0 },
             };
         }
 

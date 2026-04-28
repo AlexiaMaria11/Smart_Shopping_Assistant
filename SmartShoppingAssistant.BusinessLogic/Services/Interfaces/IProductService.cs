@@ -1,4 +1,4 @@
-﻿using SmartShoppingAssistant.BusinessLogic.DTOs;
+﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 
 namespace SmartShoppingAssistant.BusinessLogic.Services.Interfaces
 {

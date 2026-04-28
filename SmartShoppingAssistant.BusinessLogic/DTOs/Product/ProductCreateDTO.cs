@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
 
-namespace SmartShoppingAssistant.BusinessLogic.DTOs
+namespace SmartShoppingAssistant.BusinessLogic.DTOs.Product
 {
     public class ProductCreateDTO
     {
@@ -11,5 +12,7 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs
         [Required]
         [Range(0.01, double.MaxValue)]
         public decimal Price { get; set; }
+        [Required]
+        public List<int> CategoryIds { get; set; } = new List<int>();
     }
 }
