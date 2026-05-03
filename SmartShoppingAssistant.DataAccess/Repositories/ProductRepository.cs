@@ -7,23 +7,45 @@ namespace SmartShoppingAssistant.DataAccess.Repositories
     {
         public async Task<Product> GetByIdAsyncWithCategories(int id)
         {
-            var product = await context.Products
-                .Include(p => p.Categories)
-                .FirstOrDefaultAsync(p => p.Id == id);
-
-            if (product is null)
+            try
             {
-                throw new KeyNotFoundException($"Product with Id {id} not found.");
-            }
+                var product = await context.Products
+                    .Include(p => p.Categories)
+                    .FirstOrDefaultAsync(p => p.Id == id);
 
-            return product;
+                if (product == null)
+                {
+                    throw new Exception($"Product with id {id} not found.");
+                }
+
+                return product;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    $"An error occurred while retrieving the product with categories for id {id}: {ex.Message}",
+                    ex
+                );
+            }
         }
 
         public async Task<List<Product>> GetAllAsyncWithCategories()
         {
-            return await context.Products
-                .Include(p => p.Categories)
-                .ToListAsync();
+            try
+            {
+                var products = await context.Products
+                    .Include(p => p.Categories)
+                    .ToListAsync();
+
+                return products;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    $"An error occurred while retrieving products with categories: {ex.Message}",
+                    ex
+                );
+            }
         }
     }
 }

@@ -20,10 +20,17 @@ builder.Services.AddDbContext<SmartShoppingAssistantDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IRepository<Product>, BaseRepository<Product>>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddScoped<IRepository<Category>, BaseRepository<Category>>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+builder.Services.AddScoped<IRepository<Promotion>, BaseRepository<Promotion>>();
+builder.Services.AddScoped<IPromotionService, PromotionService>();
+
+builder.Services.AddScoped<IRepository<CartItem>, BaseRepository<CartItem>>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 var app = builder.Build();
 

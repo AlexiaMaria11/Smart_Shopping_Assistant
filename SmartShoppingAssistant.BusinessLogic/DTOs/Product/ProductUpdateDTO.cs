@@ -12,6 +12,6 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs.Product
         [Range(0.01, double.MaxValue)]
         public decimal Price { get; set; }
         [Required]
-        public List<int> CategoryIds { get; set; } = new List<int>();
+        public ICollection<int> CategoryIds { get; set; } = new List<int>();
     }
 }

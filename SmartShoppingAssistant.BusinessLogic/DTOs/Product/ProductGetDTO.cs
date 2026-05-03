@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
 
 namespace SmartShoppingAssistant.BusinessLogic.DTOs.Product
 {
@@ -9,7 +9,6 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs.Product
         public string Description { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
         public decimal Price { get; set; }
-        [Required]
-        public List<int> CategoryIds { get; set; } = new List<int>();
+        public ICollection<CategoryGetDTO> Categories { get; set; } = new List<CategoryGetDTO>();
     }
 }

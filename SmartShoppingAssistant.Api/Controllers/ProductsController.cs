@@ -8,16 +8,19 @@ namespace SmartShoppingAssistant.Api.Controllers
     [ApiController]
     public class ProductsController(IProductService productService) : ControllerBase
     {
-
         [HttpGet]
-        public async Task<ActionResult<List<ProductGetDTO>>> GetAll(string? name, int? categoryId, decimal? minPrice, decimal? maxPrice)
+        public async Task<ActionResult<List<ProductGetDTO>>> GetAll(
+             string? name,
+             int? categoryId,
+             decimal? minPrice,
+             decimal? maxPrice)
         {
             try
             {
                 var products = await productService.GetAllAsync(name, categoryId, minPrice, maxPrice);
                 return Ok(products);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -61,12 +64,12 @@ namespace SmartShoppingAssistant.Api.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
