@@ -36,11 +36,6 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
         {
             var category = await categoryRepository.GetByIdAsync(id);
 
-            if (category == null)
-            {
-                throw new Exception("Category not found");
-            }
-
             CategoryMapper.UpdateEntity(category, dto);
 
             var updated = await categoryRepository.UpdateAsync(category);

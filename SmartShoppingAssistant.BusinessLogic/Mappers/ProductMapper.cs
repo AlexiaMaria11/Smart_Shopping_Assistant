@@ -13,8 +13,8 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
             {
                 Id = product.Id,
                 Name = product.Name,
-                Description = product.Description,
-                ImageUrl = product.ImageUrl,
+                Description = product.Description ?? string.Empty,
+                ImageUrl = product.ImageUrl ?? string.Empty,
                 Price = product.Price,
 
                 Categories = product.Categories

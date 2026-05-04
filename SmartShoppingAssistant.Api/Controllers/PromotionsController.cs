@@ -11,41 +11,76 @@ namespace SmartShoppingAssistant.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<PromotionGetDTO>>> GetAll()
         {
-            var promotions = await promotionService.GetAllAsync();
-            return Ok(promotions);
+            try
+            {
+                var promotions = await promotionService.GetAllAsync();
+                return Ok(promotions);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<PromotionGetDTO>> GetById(int id)
         {
-            var promotion = await promotionService.GetByIdAsync(id);
-            return Ok(promotion);
+            try
+            {
+                var promotion = await promotionService.GetByIdAsync(id);
+                return Ok(promotion);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<PromotionGetDTO>> Create(PromotionCreateDTO dto)
         {
-            var createdPromotion = await promotionService.CreateAsync(dto);
+            try
+            {
+                var createdPromotion = await promotionService.CreateAsync(dto);
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = createdPromotion.Id },
-                createdPromotion
-            );
+                return CreatedAtAction(
+                    nameof(GetById),
+                    new { id = createdPromotion.Id },
+                    createdPromotion
+                );
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<PromotionGetDTO>> Update(int id, PromotionUpdateDTO dto)
         {
-            var updatedPromotion = await promotionService.UpdateAsync(id, dto);
-            return Ok(updatedPromotion);
+            try
+            {
+                var updatedPromotion = await promotionService.UpdateAsync(id, dto);
+                return Ok(updatedPromotion);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await promotionService.DeleteAsync(id);
-            return NoContent();
+            try
+            {
+                await promotionService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

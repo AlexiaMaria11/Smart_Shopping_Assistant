@@ -4,8 +4,8 @@
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public string Description { get; set; } = null!;
-        public string ImageUrl { get; set; } = null!;
+        public string? Description { get; set; }
+        public string? ImageUrl { get; set; }
         public decimal Price { get; set; }
         public CartItem CartItem { get; set; } = null!;
         public ICollection<Category> Categories { get; set; } = new List<Category>();

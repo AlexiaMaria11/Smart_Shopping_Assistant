@@ -7,13 +7,13 @@ using SmartShoppingAssistant.DataAccess.Repositories;
 namespace SmartShoppingAssistant.BusinessLogic.Services
 {
     public class PromotionService(
-        IRepository<Promotion> promotionRepository,
+        IPromotionRepository promotionRepository,
         IRepository<Product> productRepository,
         IRepository<Category> categoryRepository) : IPromotionService
     {
         public async Task<List<PromotionGetDTO>> GetAllAsync()
         {
-            var promotions = await promotionRepository.GetAllAsync();
+            var promotions = await promotionRepository.GetAllWithIncludesAsync();
 
             return promotions
                 .Select(PromotionMapper.ToGetDTO)
@@ -22,7 +22,10 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
 
         public async Task<PromotionGetDTO> GetByIdAsync(int id)
         {
-            var promotion = await promotionRepository.GetByIdAsync(id);
+            var promotion = await promotionRepository.GetByIdWithIncludesAsync(id);
+
+            if (promotion == null)
+                throw new Exception("Promotion not found.");
 
             return PromotionMapper.ToGetDTO(promotion);
         }
@@ -35,7 +38,10 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
 
             var created = await promotionRepository.AddAsync(promotion);
 
-            return PromotionMapper.ToGetDTO(created);
+            // load includes for mapping
+            var createdWithIncludes = await promotionRepository.GetByIdWithIncludesAsync(created.Id);
+
+            return PromotionMapper.ToGetDTO(createdWithIncludes!);
         }
 
         public async Task<PromotionGetDTO> UpdateAsync(int id, PromotionUpdateDTO dto)
@@ -48,7 +54,9 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
 
             var updated = await promotionRepository.UpdateAsync(promotion);
 
-            return PromotionMapper.ToGetDTO(updated);
+            var updatedWithIncludes = await promotionRepository.GetByIdWithIncludesAsync(updated.Id);
+
+            return PromotionMapper.ToGetDTO(updatedWithIncludes!);
         }
 
         public async Task DeleteAsync(int id)

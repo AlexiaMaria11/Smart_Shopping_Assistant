@@ -3,6 +3,9 @@
     public class CartGetDTO
     {
         public List<CartItemGetDTO> Items { get; set; } = new();
-        public decimal Total { get; set; }
+
+        public decimal CartTotal { get; set; }
+        public decimal Discount { get; set; }
+        public decimal FinalTotal { get; set; }
     }
 }

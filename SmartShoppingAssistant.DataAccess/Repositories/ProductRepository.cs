@@ -3,13 +3,20 @@ using SmartShoppingAssistant.DataAccess.Entities;
 
 namespace SmartShoppingAssistant.DataAccess.Repositories
 {
-    public class ProductRepository(SmartShoppingAssistantDbContext context) : BaseRepository<Product>(context), IProductRepository
+    public class ProductRepository : BaseRepository<Product>, IProductRepository
     {
+        private readonly SmartShoppingAssistantDbContext _context;
+
+        public ProductRepository(SmartShoppingAssistantDbContext context) : base(context)
+        {
+            _context = context;
+        }
+
         public async Task<Product> GetByIdAsyncWithCategories(int id)
         {
             try
             {
-                var product = await context.Products
+                var product = await _context.Products
                     .Include(p => p.Categories)
                     .FirstOrDefaultAsync(p => p.Id == id);
 
@@ -33,7 +40,7 @@ namespace SmartShoppingAssistant.DataAccess.Repositories
         {
             try
             {
-                var products = await context.Products
+                var products = await _context.Products
                     .Include(p => p.Categories)
                     .ToListAsync();
 

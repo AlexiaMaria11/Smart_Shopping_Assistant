@@ -1,6 +1,6 @@
 ﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
-using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Promotion;
+using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 using SmartShoppingAssistant.DataAccess.Entities;
 
 namespace SmartShoppingAssistant.BusinessLogic.Mappers
@@ -24,9 +24,17 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 {
                     Id = promotion.Product.Id,
                     Name = promotion.Product.Name,
-                    Description = promotion.Product.Description,
-                    ImageUrl = promotion.Product.ImageUrl,
-                    Price = promotion.Product.Price
+                    Description = promotion.Product.Description ?? string.Empty,
+                    ImageUrl = promotion.Product.ImageUrl ?? string.Empty,
+                    Price = promotion.Product.Price,
+                    Categories = promotion.Product.Categories?
+                        .Select(c => new CategoryGetDTO
+                        {
+                            Id = c.Id,
+                            Name = c.Name,
+                            Description = c.Description ?? string.Empty
+                        })
+                        .ToList() ?? new List<CategoryGetDTO>()
                 },
 
                 CategoryId = promotion.CategoryId,
@@ -34,7 +42,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 {
                     Id = promotion.Category.Id,
                     Name = promotion.Category.Name,
-                    Description = promotion.Category.Description
+                    Description = promotion.Category.Description ?? string.Empty,
                 }
             };
         }
