@@ -28,28 +28,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
 
             item.Product = await productRepository.GetByIdAsyncWithCategories(item.ProductId);
 
-            return new CartItemGetDTO
-            {
-                Id = item.Id,
-                ProductId = item.ProductId,
-                Quantity = item.Quantity,
-                Product = new ProductGetDTO
-                {
-                    Id = item.Product.Id,
-                    Name = item.Product.Name,
-                    Description = item.Product.Description ?? string.Empty,
-                    ImageUrl = item.Product.ImageUrl ?? string.Empty,
-                    Price = item.Product.Price,
-                    Categories = item.Product.Categories?
-                        .Select(c => new CategoryGetDTO
-                        {
-                            Id = c.Id,
-                            Name = c.Name,
-                            Description = c.Description ?? string.Empty
-                        })
-                        .ToList() ?? new List<CategoryGetDTO>()
-                }
-            };
+            return CartMapper.ToItemGetDTO(item);
         }
 
         public async Task<CartGetDTO> CreateAsync(CartItemCreateDTO dto)
@@ -135,13 +114,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
             if (finalTotal < 0)
                 finalTotal = 0;
 
-            return new CartGetDTO
-            {
-                Items = items,
-                CartTotal = decimal.Round(cartTotal, 2),
-                Discount = decimal.Round(totalDiscount, 2),
-                FinalTotal = decimal.Round(finalTotal, 2)
-            };
+            return CartMapper.ToCartGetDTO(items, cartTotal, totalDiscount, finalTotal);
         }
 
         private decimal CalculateTotalDiscount(

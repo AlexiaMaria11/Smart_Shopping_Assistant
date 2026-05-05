@@ -14,22 +14,47 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 Id = ci.Id,
                 ProductId = ci.ProductId,
                 Quantity = ci.Quantity,
-                Product = new ProductGetDTO
-                {
-                    Id = ci.Product.Id,
-                    Name = ci.Product.Name,
-                    Description = ci.Product.Description ?? string.Empty,
-                    ImageUrl = ci.Product.ImageUrl ?? string.Empty,
-                    Price = ci.Product.Price,
-                    Categories = ci.Product.Categories?
-                        .Select(c => new CategoryGetDTO
-                        {
-                            Id = c.Id,
-                            Name = c.Name,
-                            Description = c.Description ?? string.Empty
-                        })
-                        .ToList() ?? new List<CategoryGetDTO>()
-                }
+                Product = ToProductGetDTO(ci.Product)
+            };
+        }
+
+        public static ProductGetDTO ToProductGetDTO(Product product)
+        {
+            return new ProductGetDTO
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description ?? string.Empty,
+                ImageUrl = product.ImageUrl ?? string.Empty,
+                Price = product.Price,
+                Categories = product.Categories?
+                    .Select(ToCategoryGetDTO)
+                    .ToList() ?? new List<CategoryGetDTO>()
+            };
+        }
+
+        public static CategoryGetDTO ToCategoryGetDTO(Category category)
+        {
+            return new CategoryGetDTO
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description ?? string.Empty
+            };
+        }
+
+        public static CartGetDTO ToCartGetDTO(
+            List<CartItemGetDTO> items,
+            decimal cartTotal,
+            decimal discount,
+            decimal finalTotal)
+        {
+            return new CartGetDTO
+            {
+                Items = items,
+                CartTotal = decimal.Round(cartTotal, 2),
+                Discount = decimal.Round(discount, 2),
+                FinalTotal = decimal.Round(finalTotal, 2)
             };
         }
     }
