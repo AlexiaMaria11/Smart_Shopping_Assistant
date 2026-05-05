@@ -15,7 +15,7 @@ namespace SmartShoppingAssistant.DataAccess.Repositories
         public async Task<List<Promotion>> GetAllWithIncludesAsync()
         {
             return await _context.Promotions
-                .Include(p => p.Product)
+                .Include(p => p.Product!)
                     .ThenInclude(prod => prod.Categories)
                 .Include(p => p.Category)
                 .ToListAsync();
@@ -24,7 +24,7 @@ namespace SmartShoppingAssistant.DataAccess.Repositories
         public async Task<Promotion?> GetByIdWithIncludesAsync(int id)
         {
             return await _context.Promotions
-                .Include(p => p.Product)
+                .Include(p => p.Product!)
                     .ThenInclude(prod => prod.Categories)
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(p => p.Id == id);

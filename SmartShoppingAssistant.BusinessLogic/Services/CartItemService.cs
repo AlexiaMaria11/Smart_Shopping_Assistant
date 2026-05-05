@@ -5,6 +5,7 @@ using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
 using SmartShoppingAssistant.DataAccess.Entities;
 using SmartShoppingAssistant.DataAccess.Repositories;
+using SmartShoppingAssistant.DataAccess.Entities.Enums;
 
 namespace SmartShoppingAssistant.BusinessLogic.Services
 {
@@ -120,8 +121,155 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
             }
 
             var promotions = await promotionRepository.GetAllWithIncludesAsync();
+            var activePromotions = promotions.Where(p => p.IsActive).ToList();
 
-            return CartMapper.ToGetDTO(cartItems, promotions);
+            var items = cartItems
+                .Select(CartMapper.ToItemGetDTO)
+                .ToList();
+
+            decimal cartTotal = cartItems.Sum(ci => ci.Product.Price * ci.Quantity);
+            decimal totalDiscount = CalculateTotalDiscount(cartItems, activePromotions, cartTotal);
+
+            decimal finalTotal = cartTotal - totalDiscount;
+
+            if (finalTotal < 0)
+                finalTotal = 0;
+
+            return new CartGetDTO
+            {
+                Items = items,
+                CartTotal = decimal.Round(cartTotal, 2),
+                Discount = decimal.Round(totalDiscount, 2),
+                FinalTotal = decimal.Round(finalTotal, 2)
+            };
+        }
+
+        private decimal CalculateTotalDiscount(
+            List<CartItem> cartItems,
+            List<Promotion> promotions,
+            decimal cartTotal)
+        {
+            decimal totalDiscount = 0;
+
+            foreach (var promo in promotions)
+            {
+                // PROMOȚIE PE PRODUS
+                if (promo.ProductId.HasValue)
+                {
+                    var item = cartItems.FirstOrDefault(ci => ci.ProductId == promo.ProductId.Value);
+
+                    if (item == null || item.Product == null)
+                        continue;
+
+                    decimal subtotal = item.Product.Price * item.Quantity;
+
+                    if (promo.Type == PromotionType.Quantity)
+                    {
+                        if (promo.Reward == PromotionReward.PercentDiscount)
+                        {
+                            if (item.Quantity >= promo.Threshold)
+                            {
+                                totalDiscount += subtotal * (promo.RewardValue / 100m);
+                            }
+                        }
+
+                        if (promo.Reward == PromotionReward.FreeItems)
+                        {
+                            if (promo.Threshold <= 0 || promo.RewardValue <= 0)
+                                continue;
+
+                            int buy = (int)promo.Threshold;
+                            int free = promo.RewardValue;
+                            int groupSize = buy + free;
+
+                            int freeItems = item.Quantity / groupSize * free;
+
+                            totalDiscount += freeItems * item.Product.Price;
+                        }
+                    }
+
+                    if (promo.Type == PromotionType.CartTotal)
+                    {
+                        if (subtotal >= promo.Threshold &&
+                            promo.Reward == PromotionReward.PercentDiscount)
+                        {
+                            totalDiscount += subtotal * (promo.RewardValue / 100m);
+                        }
+                    }
+                }
+
+                // PROMOȚIE PE CATEGORIE
+                else if (promo.CategoryId.HasValue)
+                {
+                    var categoryItems = cartItems
+                        .Where(ci => ci.Product != null &&
+                                     ci.Product.Categories.Any(c => c.Id == promo.CategoryId.Value))
+                        .ToList();
+
+                    if (!categoryItems.Any())
+                        continue;
+
+                    decimal categoryTotal = categoryItems
+                        .Sum(ci => ci.Product.Price * ci.Quantity);
+
+                    if (promo.Type == PromotionType.CartTotal)
+                    {
+                        if (categoryTotal >= promo.Threshold &&
+                            promo.Reward == PromotionReward.PercentDiscount)
+                        {
+                            totalDiscount += categoryTotal * (promo.RewardValue / 100m);
+                        }
+                    }
+
+                    if (promo.Type == PromotionType.Quantity)
+                    {
+                        foreach (var item in categoryItems)
+                        {
+                            decimal subtotal = item.Product.Price * item.Quantity;
+
+                            if (promo.Reward == PromotionReward.PercentDiscount)
+                            {
+                                if (item.Quantity >= promo.Threshold)
+                                {
+                                    totalDiscount += subtotal * (promo.RewardValue / 100m);
+                                }
+                            }
+
+                            if (promo.Reward == PromotionReward.FreeItems)
+                            {
+                                if (promo.Threshold <= 0 || promo.RewardValue <= 0)
+                                    continue;
+
+                                int buy = (int)promo.Threshold;
+                                int free = promo.RewardValue;
+                                int groupSize = buy + free;
+
+                                int freeItems = item.Quantity / groupSize * free;
+
+                                totalDiscount += freeItems * item.Product.Price;
+                            }
+                        }
+                    }
+                }
+
+                // PROMOȚIE PE TOT COȘUL
+                else
+                {
+                    if (promo.Type == PromotionType.CartTotal &&
+                        promo.Reward == PromotionReward.PercentDiscount)
+                    {
+                        if (cartTotal >= promo.Threshold)
+                        {
+                            totalDiscount += cartTotal * (promo.RewardValue / 100m);
+                        }
+                    }
+                }
+            }
+
+            if (totalDiscount > cartTotal)
+                totalDiscount = cartTotal;
+
+            return totalDiscount;
         }
     }
 }
