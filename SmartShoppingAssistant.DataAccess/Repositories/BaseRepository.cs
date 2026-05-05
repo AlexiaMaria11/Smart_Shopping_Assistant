@@ -6,6 +6,8 @@ namespace SmartShoppingAssistant.DataAccess.Repositories
     {
         protected SmartShoppingAssistantDbContext Context => context;
 
+        public IQueryable<TEntity> GetAllAsQueryable() => context.Set<TEntity>().AsQueryable();
+
         public async Task<TEntity> AddAsync(TEntity entity)
         {
             try

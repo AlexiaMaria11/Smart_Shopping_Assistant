@@ -6,5 +6,7 @@ namespace SmartShoppingAssistant.DataAccess.Repositories
     {
         Task<List<Promotion>> GetAllWithIncludesAsync();
         Task<Promotion> GetByIdWithIncludesAsync(int id);
+        Task<List<Promotion>> GetActivePromotions();
+        Task<List<Promotion>> GetForProductAsync(int productId);
     }
 }

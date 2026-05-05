@@ -1,11 +1,9 @@
-﻿using SmartShoppingAssistant.BusinessLogic.Mappers;
+﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Cart;
+using SmartShoppingAssistant.BusinessLogic.Mappers;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
-using SmartShoppingAssistant.BusinessLogic.DTOs.Cart;
-using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
-using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
 using SmartShoppingAssistant.DataAccess.Entities;
-using SmartShoppingAssistant.DataAccess.Repositories;
 using SmartShoppingAssistant.DataAccess.Entities.Enums;
+using SmartShoppingAssistant.DataAccess.Repositories;
 
 namespace SmartShoppingAssistant.BusinessLogic.Services
 {
@@ -90,15 +88,14 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
                 ci.Product = await productRepository.GetByIdAsyncWithCategories(ci.ProductId);
             }
 
-            var promotions = await promotionRepository.GetAllWithIncludesAsync();
-            var activePromotions = promotions.Where(p => p.IsActive).ToList();
+            var activePromotions = await promotionRepository.GetActivePromotions();
 
             var items = cartItems
                 .Select(CartMapper.ToItemGetDTO)
                 .ToList();
 
             decimal cartTotal = cartItems.Sum(ci => ci.Product.Price * ci.Quantity);
-            decimal totalDiscount = CalculateTotalDiscount(cartItems, activePromotions, cartTotal);
+            decimal totalDiscount =CalculateTotalDiscount(cartItems, activePromotions, cartTotal);
 
             decimal finalTotal = cartTotal - totalDiscount;
 

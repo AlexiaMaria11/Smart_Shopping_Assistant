@@ -9,5 +9,6 @@ namespace SmartShoppingAssistant.BusinessLogic.Services.Interfaces
         Task<PromotionGetDTO> CreateAsync(PromotionCreateDTO dto);
         Task<PromotionGetDTO> UpdateAsync(int id, PromotionUpdateDTO dto);
         Task DeleteAsync(int id);
+        Task<List<PromotionGetDTO>> GetForProductAsync(int productId);
     }
 }

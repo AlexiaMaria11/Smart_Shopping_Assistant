@@ -61,6 +61,13 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
             await promotionRepository.DeleteAsync(id);
         }
 
+        public async Task<List<PromotionGetDTO>> GetForProductAsync(int productId)
+        {
+            var promotions = await promotionRepository.GetForProductAsync(productId);
+
+            return promotions.Select(PromotionMapper.ToGetDTO).ToList();
+        }
+
         private async Task ValidatePromotionTarget(int? productId, int? categoryId)
         {
             if (productId.HasValue && categoryId.HasValue)
