@@ -1,7 +1,6 @@
-﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
-using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
+﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
+using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 using SmartShoppingAssistant.DataAccess.Entities;
-using System.Linq;
 
 namespace SmartShoppingAssistant.BusinessLogic.Mappers
 {
@@ -33,8 +32,8 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
             return new Product
             {
                 Name = productDto.Name,
-                Description = productDto.Description,
-                ImageUrl = productDto.ImageUrl,
+                Description = productDto.Description ?? string.Empty,
+                ImageUrl = productDto.ImageUrl ?? string.Empty,
                 Price = productDto.Price,
             };
         }
@@ -42,8 +41,8 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
         public static void UpdateEntity(Product product, ProductUpdateDTO productDto)
         {
             product.Name = productDto.Name;
-            product.Description = productDto.Description;
-            product.ImageUrl = productDto.ImageUrl;
+            product.Description = productDto.Description ?? string.Empty;
+            product.ImageUrl = productDto.ImageUrl ?? string.Empty;
             product.Price = productDto.Price;
         }
     }

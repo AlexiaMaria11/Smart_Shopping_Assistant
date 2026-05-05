@@ -22,15 +22,6 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
             return await BuildCartDTO(cartItems.ToList());
         }
 
-        public async Task<CartItemGetDTO> GetByIdAsync(int id)
-        {
-            var item = await cartItemRepository.GetByIdAsync(id);
-
-            item.Product = await productRepository.GetByIdAsyncWithCategories(item.ProductId);
-
-            return CartMapper.ToItemGetDTO(item);
-        }
-
         public async Task<CartGetDTO> CreateAsync(CartItemCreateDTO dto)
         {
             var product = await productRepository.GetByIdAsync(dto.ProductId);

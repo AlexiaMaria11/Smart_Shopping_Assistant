@@ -21,13 +21,20 @@ namespace SmartShoppingAssistant.DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Promotion?> GetByIdWithIncludesAsync(int id)
+        public async Task<Promotion> GetByIdWithIncludesAsync(int id)
         {
-            return await _context.Promotions
+            var promotion = await _context.Promotions
                 .Include(p => p.Product!)
                     .ThenInclude(prod => prod.Categories)
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (promotion == null)
+            {
+                throw new Exception($"Promotion with id {id} not found.");
+            }
+
+            return promotion;
         }
     }
 }

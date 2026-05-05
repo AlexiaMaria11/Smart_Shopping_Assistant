@@ -4,7 +4,7 @@ using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
 
 namespace SmartShoppingAssistant.Api.Controllers
 {
-    [Route("api/cart")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CartController(ICartItemService cartItemService) : ControllerBase
     {
@@ -48,7 +48,7 @@ namespace SmartShoppingAssistant.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return NotFound(ex.Message);
             }
         }
 

@@ -24,9 +24,6 @@ namespace SmartShoppingAssistant.BusinessLogic.Services
         {
             var promotion = await promotionRepository.GetByIdWithIncludesAsync(id);
 
-            if (promotion == null)
-                throw new Exception("Promotion not found.");
-
             return PromotionMapper.ToGetDTO(promotion);
         }
 
