@@ -15,9 +15,7 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs.Promotion
         public bool IsActive { get; set; }
 
         public int? ProductId { get; set; }
-        public ProductGetDTO? Product { get; set; }
 
         public int? CategoryId { get; set; }
-        public CategoryGetDTO? Category { get; set; }
     }
 }

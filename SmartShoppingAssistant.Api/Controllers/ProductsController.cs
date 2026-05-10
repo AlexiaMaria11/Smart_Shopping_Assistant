@@ -17,7 +17,7 @@ namespace SmartShoppingAssistant.Api.Controllers
         {
             try
             {
-                var products = await productService.GetAllAsync(name, categoryId, minPrice, maxPrice);
+                var products = await productService.GetAllAsync(categoryId, name, minPrice, maxPrice);
                 return Ok(products);
             }
             catch (Exception ex)

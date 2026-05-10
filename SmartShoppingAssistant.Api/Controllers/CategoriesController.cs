@@ -14,8 +14,8 @@ namespace SmartShoppingAssistant.Api.Controllers
         {
             try
             {
-                var products = await categoryService.GetAllAsync();
-                return Ok(products);
+                var categories = await categoryService.GetAllAsync();
+                return Ok(categories);
             }
             catch (Exception ex)
             {
@@ -28,8 +28,8 @@ namespace SmartShoppingAssistant.Api.Controllers
         {
             try
             {
-                var product = await categoryService.GetByIdAsync(id);
-                return Ok(product);
+                var category = await categoryService.GetByIdAsync(id);
+                return Ok(category);
             }
             catch (Exception ex)
             {

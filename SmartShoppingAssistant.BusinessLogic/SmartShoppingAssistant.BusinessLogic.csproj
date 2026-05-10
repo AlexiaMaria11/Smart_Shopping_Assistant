@@ -15,8 +15,4 @@
     <ProjectReference Include="..\SmartShoppingAssistant.DataAccess\SmartShoppingAssistant.DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Agents\" />
-  </ItemGroup>
-
 </Project>

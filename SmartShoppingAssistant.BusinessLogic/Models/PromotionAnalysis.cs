@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
 
+namespace SmartShoppingAssistant.BusinessLogic.Models;
+
 [Description("Promotion analysis for the current cart")]
 public sealed class PromotionAnalysis
 {

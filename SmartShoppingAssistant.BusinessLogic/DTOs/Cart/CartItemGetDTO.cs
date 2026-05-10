@@ -7,6 +7,8 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs.Cart
         public int Id { get; set; }
         public int ProductId { get; set; }
         public int Quantity { get; set; }
-        public ProductGetDTO Product { get; set; } = null!;
+        public string ProductName { get; set; } = null!;
+        public decimal Price { get; set; }
+        public decimal Subtotal { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 using OpenAI;
 using SmartShoppingAssistant.BusinessLogic.Services;
+using SmartShoppingAssistant.BusinessLogic.Agents;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
 using SmartShoppingAssistant.DataAccess;
 using SmartShoppingAssistant.DataAccess.Entities;
@@ -21,27 +22,23 @@ var connectionString = builder.Configuration.GetConnectionString("SmartShoppingA
 builder.Services.AddDbContext<SmartShoppingAssistantDbContext>(options => 
     options.UseSqlServer(connectionString));
 
-builder.Services.AddScoped<IRepository<Product>, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IProductService, ProductService>();
-
-builder.Services.AddScoped<IRepository<Category>, BaseRepository<Category>>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-
-builder.Services.AddScoped<IRepository<Promotion>, BaseRepository<Promotion>>();
 builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
+builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
+
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
-builder.Services.AddScoped<IRepository<CartItem>, BaseRepository<CartItem>>();
-builder.Services.AddScoped<ICartItemService, CartItemService>();
+//var openAiApiKey = builder.Configuration["OpenAI:ApiKey"] ?? throw new Exception("OpenAI API key is not configured.");
 
-var openAiApiKey = builder.Configuration["OpenAI:ApiKey"] ?? throw new Exception("OpenAI API key is not configured.");
+//var openAiModel = builder.Configuration["OpenAI:Model"] ?? "gpt-4o";
 
-var openAiModel = builder.Configuration["OpenAI:Model"] ?? "gpt-4o";
+//builder.Services.AddSingleton<IChatClient>(new OpenAIClient(openAiApiKey).GetChatClient(openAiModel).AsIChatClient().AsBuilder().UseFunctionInvocation().Build());
 
-builder.Services.AddSingleton<IChatClient>(new OpenAIClient(openAiApiKey).GetChatClient(openAiModel).AsIChatClient().AsBuilder().UseFunctionInvocation().Build();
-
-builder.Services.AddScoped<IPromotionCheckerAgent, PromotionCheckerAgent>();
+//builder.Services.AddScoped<IPromotionCheckerAgent, PromotionCheckerAgent>();
 
 var app = builder.Build();
 

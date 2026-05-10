@@ -6,14 +6,14 @@ namespace SmartShoppingAssistant.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CartController(ICartItemService cartItemService) : ControllerBase
+    public class CartController(ICartService cartService) : ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<CartGetDTO>> GetCart()
         {
             try
             {
-                var cart = await cartItemService.GetAllAsync();
+                var cart = await cartService.GetCartAsync();
                 return Ok(cart);
             }
             catch (Exception ex)
@@ -27,7 +27,7 @@ namespace SmartShoppingAssistant.Api.Controllers
         {
             try
             {
-                var cart = await cartItemService.CreateAsync(dto);
+                var cart = await cartService.AddItemAsync(dto);
                 return Ok(cart);
             }
             catch (Exception ex)
@@ -43,7 +43,7 @@ namespace SmartShoppingAssistant.Api.Controllers
         {
             try
             {
-                var cart = await cartItemService.UpdateAsync(itemId, dto);
+                var cart = await cartService.UpdateItemAsync(itemId, dto);
                 return Ok(cart);
             }
             catch (Exception ex)
@@ -57,8 +57,8 @@ namespace SmartShoppingAssistant.Api.Controllers
         {
             try
             {
-                var cart = await cartItemService.DeleteAsync(itemId);
-                return Ok(cart);
+                await cartService.RemoveItemAsync(itemId);
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -71,7 +71,7 @@ namespace SmartShoppingAssistant.Api.Controllers
         {
             try
             {
-                await cartItemService.DeleteAllAsync();
+                await cartService.ClearCartAsync();
                 return NoContent();
             }
             catch (Exception ex)

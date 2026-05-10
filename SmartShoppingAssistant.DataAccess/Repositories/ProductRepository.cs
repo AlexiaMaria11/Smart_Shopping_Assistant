@@ -1,58 +1,54 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartShoppingAssistant.DataAccess;
 using SmartShoppingAssistant.DataAccess.Entities;
+using SmartShoppingAssistant.DataAccess.Repositories;
 
-namespace SmartShoppingAssistant.DataAccess.Repositories
+namespace SmartShoppingAssistant.DataAccess.Repositories;
+
+public class ProductRepository(SmartShoppingAssistantDbContext context)
+    : BaseRepository<Product>(context), IProductRepository
 {
-    public class ProductRepository : BaseRepository<Product>, IProductRepository
+    private IQueryable<Product> WithCategories() =>
+        GetAllAsQueryable().Include(p => p.Categories);
+
+    public async Task<List<Product>> GetAllAsync(int? categoryId, string? name, decimal? minPrice, decimal? maxPrice)
     {
-        private readonly SmartShoppingAssistantDbContext _context;
+        var query = WithCategories();
 
-        public ProductRepository(SmartShoppingAssistantDbContext context) : base(context)
-        {
-            _context = context;
-        }
+        if (categoryId.HasValue)
+            query = query.Where(p => p.Categories.Any(c => c.Id == categoryId.Value));
 
-        public async Task<Product> GetByIdAsyncWithCategories(int id)
-        {
-            try
-            {
-                var product = await _context.Products
-                    .Include(p => p.Categories)
-                    .FirstOrDefaultAsync(p => p.Id == id);
+        if (!string.IsNullOrWhiteSpace(name))
+            query = query.Where(p => p.Name.Contains(name));
 
-                if (product == null)
-                {
-                    throw new Exception($"Product with id {id} not found.");
-                }
+        if (minPrice.HasValue)
+            query = query.Where(p => p.Price >= minPrice.Value);
 
-                return product;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(
-                    $"An error occurred while retrieving the product with categories for id {id}: {ex.Message}",
-                    ex
-                );
-            }
-        }
+        if (maxPrice.HasValue)
+            query = query.Where(p => p.Price <= maxPrice.Value);
 
-        public async Task<List<Product>> GetAllAsyncWithCategories()
-        {
-            try
-            {
-                var products = await _context.Products
-                    .Include(p => p.Categories)
-                    .ToListAsync();
+        return await query.ToListAsync();
+    }
 
-                return products;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(
-                    $"An error occurred while retrieving products with categories: {ex.Message}",
-                    ex
-                );
-            }
-        }
+    public async Task<Product> GetByIdWithCategoriesAsync(int id)
+    {
+        return await WithCategories().FirstOrDefaultAsync(p => p.Id == id)
+            ?? throw new Exception($"Product with id {id} not found");
+    }
+
+    public async Task<List<Product>> SearchAsync(string query)
+    {
+        return await WithCategories()
+            .Where(p => p.Name.Contains(query) || (p.Description != null && p.Description.Contains(query)))
+            .Take(10)
+            .ToListAsync();
+    }
+
+    public async Task<List<Product>> GetByCategoryAsync(int categoryId)
+    {
+        return await WithCategories()
+            .Where(p => p.Categories.Any(c => c.Id == categoryId))
+            .Take(10)
+            .ToListAsync();
     }
 }

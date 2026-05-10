@@ -1,11 +1,17 @@
-﻿namespace SmartShoppingAssistant.BusinessLogic.DTOs.Cart
+﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Promotion;
+
+namespace SmartShoppingAssistant.BusinessLogic.DTOs.Cart
 {
     public class CartGetDTO
     {
-        public List<CartItemGetDTO> Items { get; set; } = new();
+        public List<CartItemGetDTO> Items { get; set; } = [];
 
-        public decimal CartTotal { get; set; }
-        public decimal Discount { get; set; }
-        public decimal FinalTotal { get; set; }
+        public decimal Subtotal { get; set; }
+
+        public List<AppliedPromotionDTO> AppliedPromotions { get; set; } = [];
+
+        public decimal TotalDiscount { get; set; }
+
+        public decimal Total { get; set; }
     }
 }

@@ -9,11 +9,11 @@ namespace SmartShoppingAssistant.Api.Controllers
     public class PromotionsController(IPromotionService promotionService) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<PromotionGetDTO>>> GetAll()
+        public async Task<ActionResult<List<PromotionGetDTO>>> GetAll(bool activeOnly)
         {
             try
             {
-                var promotions = await promotionService.GetAllAsync();
+                var promotions = await promotionService.GetAllAsync(activeOnly);
                 return Ok(promotions);
             }
             catch (Exception ex)

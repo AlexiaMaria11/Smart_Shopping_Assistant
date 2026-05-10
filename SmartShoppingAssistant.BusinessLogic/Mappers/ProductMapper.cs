@@ -1,4 +1,5 @@
-﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
+﻿using System.Linq;
+using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 using SmartShoppingAssistant.DataAccess.Entities;
 
@@ -15,15 +16,11 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 Description = product.Description ?? string.Empty,
                 ImageUrl = product.ImageUrl ?? string.Empty,
                 Price = product.Price,
-
-                Categories = product.Categories
-                    .Select(c => new CategoryGetDTO
-                    {
-                        Id = c.Id,
-                        Name = c.Name,
-                        Description = c.Description
-                    })
-                    .ToList()
+                Categories = product.Categories.Select(c => new CategoryGetDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                }).ToList()
             };
         }
 

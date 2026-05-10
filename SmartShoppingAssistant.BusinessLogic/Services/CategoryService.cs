@@ -1,51 +1,46 @@
-﻿using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
+﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
+using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
 using SmartShoppingAssistant.DataAccess.Entities;
 using SmartShoppingAssistant.DataAccess.Repositories;
-using SmartShoppingAssistant.BusinessLogic.Mappers;
-using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
 
-namespace SmartShoppingAssistant.BusinessLogic.Services
+namespace SmartShoppingAssistant.BusinessLogic.Services;
+
+public class CategoryService(ICategoryRepository categoryRepository) : ICategoryService
 {
-    public class CategoryService(IRepository<Category> categoryRepository) : ICategoryService
+    public async Task<List<CategoryGetDTO>> GetAllAsync()
     {
-        public async Task<CategoryGetDTO> GetByIdAsync(int id)
-        {
-            var category = await categoryRepository.GetByIdAsync(id);
-
-            return CategoryMapper.ToGetDTO(category);
-        }
-
-        public async Task<List<CategoryGetDTO>> GetAllAsync()
-        {
-            var categories = await categoryRepository.GetAllAsync();
-
-            return categories
-                .Select(CategoryMapper.ToGetDTO)
-                .ToList();
-        }
-
-        public async Task<CategoryGetDTO> CreateAsync(CategoryCreateDTO dto)
-        {
-            var entity = CategoryMapper.ToEntity(dto);
-
-            var added = await categoryRepository.AddAsync(entity);
-            return CategoryMapper.ToGetDTO(added);
-        }
-
-        public async Task<CategoryGetDTO> UpdateAsync(int id, CategoryUpdateDTO dto)
-        {
-            var category = await categoryRepository.GetByIdAsync(id);
-
-            CategoryMapper.UpdateEntity(category, dto);
-
-            var updated = await categoryRepository.UpdateAsync(category);
-
-            return CategoryMapper.ToGetDTO(updated);
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            await categoryRepository.DeleteAsync(id);
-        }
+        var categories = await categoryRepository.GetAllAsync();
+        return categories.Select(MapToDTO).ToList();
     }
+
+    public async Task<CategoryGetDTO> GetByIdAsync(int id)
+    {
+        var category = await categoryRepository.GetByIdAsync(id);
+        return MapToDTO(category);
+    }
+
+    public async Task<CategoryGetDTO> CreateAsync(CategoryCreateDTO dto)
+    {
+        var category = new Category { Name = dto.Name, Description = dto.Description };
+        var created = await categoryRepository.AddAsync(category);
+        return MapToDTO(created);
+    }
+
+    public async Task<CategoryGetDTO> UpdateAsync(int id, CategoryUpdateDTO dto)
+    {
+        var category = await categoryRepository.GetByIdAsync(id);
+        category.Name = dto.Name;
+        category.Description = dto.Description;
+        var updated = await categoryRepository.UpdateAsync(category);
+        return MapToDTO(updated);
+    }
+
+    public Task DeleteAsync(int id) => categoryRepository.DeleteAsync(id);
+
+    private static CategoryGetDTO MapToDTO(Category c) => new()
+    {
+        Id = c.Id,
+        Name = c.Name,
+        Description = c.Description
+    };
 }
