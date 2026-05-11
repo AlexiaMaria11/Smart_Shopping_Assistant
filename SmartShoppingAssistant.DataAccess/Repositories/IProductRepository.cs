@@ -8,4 +8,5 @@ public interface IProductRepository : IRepository<Product>
     Task<Product> GetByIdWithCategoriesAsync(int id);
     Task<List<Product>> SearchAsync(string query);
     Task<List<Product>> GetByCategoryAsync(int categoryId);
+    Task<List<Product>> GetByCategoriesAsync(List<int> categoryIds);
 }

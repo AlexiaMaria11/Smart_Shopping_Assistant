@@ -1,5 +1,6 @@
 ﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Cart;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Promotion;
+using SmartShoppingAssistant.BusinessLogic.Mappers;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
 using SmartShoppingAssistant.DataAccess.Entities;
 using SmartShoppingAssistant.DataAccess.Entities.Enums;
@@ -26,7 +27,7 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
 
         return new CartGetDTO
         {
-            Items = cartItems.Select(MapToDTO).ToList(),
+            Items = cartItems.Select(CartMapper.ToItemGetDTO).ToList(),
             Subtotal = subtotal,
             AppliedPromotions = appliedPromotions,
             TotalDiscount = totalDiscount,
@@ -43,13 +44,13 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
         {
             existing.Quantity += dto.Quantity;
             await cartItemRepository.UpdateAsync(existing);
-            return MapToDTO(existing);
+            return CartMapper.ToItemGetDTO(existing);
         }
 
         var item = new CartItem { ProductId = dto.ProductId, Quantity = dto.Quantity };
         await cartItemRepository.AddAsync(item);
         var added = await cartItemRepository.GetByIdWithProductAsync(item.Id);
-        return MapToDTO(added);
+        return CartMapper.ToItemGetDTO(added);
     }
 
     public async Task<CartItemGetDTO> UpdateItemAsync(int itemId, CartItemUpdateDTO dto)
@@ -57,7 +58,7 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
         var item = await cartItemRepository.GetByIdWithProductAsync(itemId);
         item.Quantity = dto.Quantity;
         await cartItemRepository.UpdateAsync(item);
-        return MapToDTO(item);
+        return CartMapper.ToItemGetDTO(item);
     }
 
     public Task RemoveItemAsync(int itemId) => cartItemRepository.DeleteAsync(itemId);
@@ -111,14 +112,4 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
             _ => 0
         };
     }
-
-    private static CartItemGetDTO MapToDTO(CartItem cartItem) => new()
-    {
-        Id = cartItem.Id,
-        ProductId = cartItem.ProductId,
-        ProductName = cartItem.Product.Name,
-        Price = cartItem.Product.Price,
-        Quantity = cartItem.Quantity,
-        Subtotal = cartItem.Product.Price * cartItem.Quantity
-    };
 }

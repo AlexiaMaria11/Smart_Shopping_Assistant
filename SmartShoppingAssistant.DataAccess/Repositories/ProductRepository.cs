@@ -5,11 +5,18 @@ using SmartShoppingAssistant.DataAccess.Repositories;
 
 namespace SmartShoppingAssistant.DataAccess.Repositories;
 
-public class ProductRepository(SmartShoppingAssistantDbContext context)
-    : BaseRepository<Product>(context), IProductRepository
+public class ProductRepository
+    : BaseRepository<Product>, IProductRepository
 {
     private IQueryable<Product> WithCategories() =>
         GetAllAsQueryable().Include(p => p.Categories);
+
+    private readonly SmartShoppingAssistantDbContext _context;
+
+    public ProductRepository(SmartShoppingAssistantDbContext context) : base(context)
+    {
+        _context = context;
+    }
 
     public async Task<List<Product>> GetAllAsync(int? categoryId, string? name, decimal? minPrice, decimal? maxPrice)
     {
@@ -28,6 +35,14 @@ public class ProductRepository(SmartShoppingAssistantDbContext context)
             query = query.Where(p => p.Price <= maxPrice.Value);
 
         return await query.ToListAsync();
+    }
+
+    public async Task<List<Product>> GetByCategoriesAsync(List<int> categoryIds)
+    {
+        return await _context.Products
+            .Include(p => p.Categories)
+            .Where(p => p.Categories.Any(c => categoryIds.Contains(c.Id)))
+            .ToListAsync();
     }
 
     public async Task<Product> GetByIdWithCategoriesAsync(int id)

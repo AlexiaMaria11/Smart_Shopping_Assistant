@@ -11,7 +11,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
             {
                 Id = category.Id,
                 Name = category.Name,
-                Description = category.Description ?? string.Empty
+                Description = category.Description
             };
         }
 
@@ -20,14 +20,14 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
             return new Category
             {
                 Name = categoryDto.Name,
-                Description = categoryDto.Description ?? string.Empty
+                Description = categoryDto.Description
             };
         }
 
         public static void UpdateEntity(Category category, CategoryUpdateDTO categoryDto)
         {
             category.Name = categoryDto.Name;
-            category.Description = categoryDto.Description ?? string.Empty;
+            category.Description = categoryDto.Description;
         }
     }
 }

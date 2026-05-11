@@ -11,5 +11,6 @@ namespace SmartShoppingAssistant.BusinessLogic.Services.Interfaces
         Task DeleteAsync(int id);
         Task<List<ProductGetDTO>> SearchAsync(string query);
         Task<List<ProductGetDTO>> GetByCategoryAsync(int categoryId);
+        Task<List<ProductGetDTO>> GetByCategoriesAsync(List<int> categoryIds);
     }
 }

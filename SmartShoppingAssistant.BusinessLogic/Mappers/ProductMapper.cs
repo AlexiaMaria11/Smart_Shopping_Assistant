@@ -16,11 +16,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 Description = product.Description ?? string.Empty,
                 ImageUrl = product.ImageUrl ?? string.Empty,
                 Price = product.Price,
-                Categories = product.Categories.Select(c => new CategoryGetDTO
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                }).ToList()
+                Categories = product.Categories.Select(CategoryMapper.ToGetDTO).ToList()
             };
         }
 
@@ -29,17 +25,17 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
             return new Product
             {
                 Name = productDto.Name,
-                Description = productDto.Description ?? string.Empty,
-                ImageUrl = productDto.ImageUrl ?? string.Empty,
-                Price = productDto.Price,
+                Description = productDto.Description,
+                ImageUrl = productDto.ImageUrl,
+                Price = productDto.Price
             };
         }
 
         public static void UpdateEntity(Product product, ProductUpdateDTO productDto)
         {
             product.Name = productDto.Name;
-            product.Description = productDto.Description ?? string.Empty;
-            product.ImageUrl = productDto.ImageUrl ?? string.Empty;
+            product.Description = productDto.Description;
+            product.ImageUrl = productDto.ImageUrl;
             product.Price = productDto.Price;
         }
     }
