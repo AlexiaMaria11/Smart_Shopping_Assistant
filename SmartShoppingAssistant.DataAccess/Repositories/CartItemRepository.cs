@@ -42,10 +42,9 @@ public class CartItemRepository
             .ToListAsync();
     }
 
-    public async Task<CartItem> GetByProductIdAsync(int productId)
+    public async Task<CartItem?> GetByProductIdAsync(int productId)
     {
-        return await WithProduct().FirstOrDefaultAsync(ci => ci.ProductId == productId)
-            ?? throw new Exception($"Cart item with product id {productId} not found");
+        return await WithProduct().FirstOrDefaultAsync(ci => ci.ProductId == productId);
     }
 
     public async Task ClearAsync()

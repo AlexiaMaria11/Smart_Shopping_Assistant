@@ -35,33 +35,47 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
         };
     }
 
-    public async Task<CartItemGetDTO> AddItemAsync(CartItemCreateDTO dto)
+    public async Task<CartGetDTO> AddItemAsync(CartItemCreateDTO dto)
     {
-        await productRepository.GetByIdAsync(dto.ProductId); // throws if not found
+        await productRepository.GetByIdAsync(dto.ProductId);
 
         var existing = await cartItemRepository.GetByProductIdAsync(dto.ProductId);
+
         if (existing != null)
         {
             existing.Quantity += dto.Quantity;
             await cartItemRepository.UpdateAsync(existing);
-            return CartMapper.ToItemGetDTO(existing);
+        }
+        else
+        {
+            var item = new CartItem
+            {
+                ProductId = dto.ProductId,
+                Quantity = dto.Quantity
+            };
+
+            await cartItemRepository.AddAsync(item);
         }
 
-        var item = new CartItem { ProductId = dto.ProductId, Quantity = dto.Quantity };
-        await cartItemRepository.AddAsync(item);
-        var added = await cartItemRepository.GetByIdWithProductAsync(item.Id);
-        return CartMapper.ToItemGetDTO(added);
+        return await GetCartAsync();
     }
 
-    public async Task<CartItemGetDTO> UpdateItemAsync(int itemId, CartItemUpdateDTO dto)
+    public async Task<CartGetDTO> UpdateItemAsync(int itemId, CartItemUpdateDTO dto)
     {
         var item = await cartItemRepository.GetByIdWithProductAsync(itemId);
+
         item.Quantity = dto.Quantity;
+
         await cartItemRepository.UpdateAsync(item);
-        return CartMapper.ToItemGetDTO(item);
+
+        return await GetCartAsync();
     }
 
-    public Task RemoveItemAsync(int itemId) => cartItemRepository.DeleteAsync(itemId);
+    public async Task<CartGetDTO> RemoveItemAsync(int itemId)
+    {
+        await cartItemRepository.DeleteAsync(itemId);
+        return await GetCartAsync();
+    }
 
     public Task ClearCartAsync() => cartItemRepository.ClearAsync();
 

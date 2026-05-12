@@ -57,8 +57,8 @@ namespace SmartShoppingAssistant.Api.Controllers
         {
             try
             {
-                await cartService.RemoveItemAsync(itemId);
-                return NoContent();
+                var cart = await cartService.RemoveItemAsync(itemId);
+                return Ok(cart);
             }
             catch (Exception ex)
             {

@@ -8,14 +8,11 @@ public static class DataSeeder
 {
     public static async Task SeedAsync(SmartShoppingAssistantDbContext context)
     {
-        // Ruleaza migrarile in asteptare
         await context.Database.MigrateAsync();
 
-        // Nu seed-uim daca exista deja date
         if (await context.Categories.AnyAsync())
             return;
 
-        // --- Categorii ---
         var electronics = new Category { Name = "Electronics", Description = "Gadgets and electronic devices" };
         var clothing = new Category { Name = "Clothing", Description = "Apparel and fashion items" };
         var food = new Category { Name = "Food & Beverages", Description = "Groceries and drinks" };
@@ -24,7 +21,6 @@ public static class DataSeeder
         await context.Categories.AddRangeAsync(electronics, clothing, food, sports);
         await context.SaveChangesAsync();
 
-        // --- Produse ---
         var products = new List<Product>
         {
             new()
@@ -96,7 +92,6 @@ public static class DataSeeder
         await context.Products.AddRangeAsync(products);
         await context.SaveChangesAsync();
 
-        // --- Promotii ---
         var promotions = new List<Promotion>
         {
             new()
@@ -135,8 +130,8 @@ public static class DataSeeder
                 Threshold = 2m,
                 Reward = PromotionReward.FreeItems,
                 RewardValue = 1,
-                ProductId = products[4].Id, // Protein Bar
-                IsActive = false            // inactiva - exemplu
+                ProductId = products[4].Id, 
+                IsActive = false            
             }
         };
 
