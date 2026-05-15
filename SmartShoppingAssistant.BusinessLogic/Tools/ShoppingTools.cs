@@ -1,7 +1,6 @@
 ﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Promotion;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
-using SmartShoppingAssistant.BusinessLogic.Services;
 using System.ComponentModel;
 
 namespace SmartShoppingAssistant.BusinessLogic.Tools

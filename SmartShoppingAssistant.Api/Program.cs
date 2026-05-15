@@ -31,14 +31,25 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
 builder.Services.AddScoped<ICartService, CartService>();
 
-//var openAiApiKey = builder.Configuration["OpenAI:ApiKey"] ?? throw new Exception("OpenAI API key is not configured.");
+var openAiApiKey = builder.Configuration["OpenAI:ApiKey"] ?? throw new Exception("OpenAI API key is not configured.");
 
-//var openAiModel = builder.Configuration["OpenAI:Model"] ?? "gpt-4o";
+var openAiModel = builder.Configuration["OpenAI:Model"] ?? "gpt-4o";
 
-//builder.Services.AddSingleton<IChatClient>(new OpenAIClient(openAiApiKey).GetChatClient(openAiModel).AsIChatClient().AsBuilder().UseFunctionInvocation().Build());
+builder.Services.AddSingleton<IChatClient>(new OpenAIClient(openAiApiKey).GetChatClient(openAiModel).AsIChatClient().AsBuilder().UseFunctionInvocation().Build());
 
-//builder.Services.AddScoped<IPromotionCheckerAgent, PromotionCheckerAgent>();
-//builder.Services.AddScoped<ISuggestionComposerAgent, SuggestionComposerAgent>();
+builder.Services.AddScoped<IPromotionCheckerAgent, PromotionCheckerAgent>();
+builder.Services.AddScoped<ISuggestionComposerAgent, SuggestionComposerAgent>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin",
+        corsPolicyBuilder =>
+        {
+            corsPolicyBuilder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
 

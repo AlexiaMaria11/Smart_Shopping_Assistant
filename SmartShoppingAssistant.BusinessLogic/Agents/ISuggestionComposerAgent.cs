@@ -6,6 +6,5 @@ public interface ISuggestionComposerAgent
 {
     ChatClientAgent Build(
         string cartJson,
-        string categoriesJson,
-        string promotionAnalysisJson);
+        string categoriesJson);
 }

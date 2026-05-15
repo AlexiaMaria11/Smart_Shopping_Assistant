@@ -1,14 +1,18 @@
-﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Cart;
+﻿using Microsoft.Agents.AI.Workflows;
+using Microsoft.Extensions.AI;
+using SmartShoppingAssistant.BusinessLogic.Agents;
+using SmartShoppingAssistant.BusinessLogic.DTOs.Cart;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Promotion;
 using SmartShoppingAssistant.BusinessLogic.Mappers;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
 using SmartShoppingAssistant.DataAccess.Entities;
 using SmartShoppingAssistant.DataAccess.Entities.Enums;
 using SmartShoppingAssistant.DataAccess.Repositories;
+using System.Text.Json;
 
 namespace SmartShoppingAssistant.BusinessLogic.Services;
 
-public class CartService(ICartItemRepository cartItemRepository, IProductRepository productRepository, IPromotionRepository promotionRepository) : ICartService
+public class CartService(ICartItemRepository cartItemRepository, IProductRepository productRepository, IPromotionRepository promotionRepository, ICategoryRepository categoryRepository, IPromotionCheckerAgent promotionCheckerAgent, ISuggestionComposerAgent suggestionComposerAgent) : ICartService
 {
     public async Task<CartGetDTO> GetCartAsync()
     {
@@ -125,5 +129,58 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
                     .Sum(),
             _ => 0
         };
+    }
+    public async Task<AnalysisResponse> AnalyzeCartAsync()
+    {
+        var cart = await cartItemRepository.GetAllWithProductAndCategoriesAsync();
+        var categories = await categoryRepository.GetAllAsync();
+
+        var cartJson = JsonSerializer.Serialize(cart.Select(c => new
+        {
+            c.ProductId,
+            c.Product.Price,
+            c.Quantity,
+            LineTotal = c.Product.Price*c.Quantity,
+            CategoryIds = c.Product.Categories.Select(cat => new {CategoryId = cat.Id, CategoryName = cat.Name}).ToList(),
+        }));
+
+        var categoryJson = JsonSerializer.Serialize(categories.Select(c => new
+        {
+            Categoryid = c.Id,
+            CategoryName = c.Name,
+        }));
+
+        var promotionAgent = promotionCheckerAgent.Build(cartJson);
+        var suggestionAgent = suggestionComposerAgent.Build(cartJson, categoryJson);
+
+        var workflow = new WorkflowBuilder(promotionAgent).AddEdge(promotionAgent, suggestionAgent)
+            .WithOutputFrom(suggestionAgent)
+            .Build();
+
+        var chatMessage = new List<ChatMessage>
+        {
+            new(ChatRole.User, "Analyze the current cart and suggest improvements.")
+        };
+
+        await using var result = await InProcessExecution.RunStreamingAsync(workflow, chatMessage);
+
+        await result.TrySendMessageAsync(new TurnToken(emitEvents:true));
+
+        var jsonBuilder = new System.Text.StringBuilder();
+
+        await foreach(var message in result.WatchStreamAsync())
+        {
+            if(message is AgentResponseUpdateEvent update && update.ExecutorId.StartsWith("SuggestionComposer"))
+            {
+                jsonBuilder.Append(update.Update.Text);
+            }
+            else if(message is WorkflowErrorEvent errorEvent)
+            {
+                throw new InvalidOperationException(errorEvent.Exception?.Message);
+            }
+        }
+
+        var json = jsonBuilder.ToString();
+        return JsonSerializer.Deserialize<AnalysisResponse>(json) ?? throw new InvalidOperationException("Failed to deserialize analysis response");
     }
 }

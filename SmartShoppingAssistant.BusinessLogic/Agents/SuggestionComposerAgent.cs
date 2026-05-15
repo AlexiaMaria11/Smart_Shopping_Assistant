@@ -9,7 +9,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Agents;
 
 public class SuggestionComposerAgent(IChatClient chatClient, IProductService productService, IPromotionService promotionService) : ISuggestionComposerAgent
 {
-    public ChatClientAgent Build(string cartJson, string categoriesJson, string promotionAnalysisJson)
+    public ChatClientAgent Build(string cartJson, string categoriesJson)
     {
         return new ChatClientAgent(
             chatClient,
@@ -19,27 +19,29 @@ public class SuggestionComposerAgent(IChatClient chatClient, IProductService pro
                 Description = "Creates smart shopping suggestions for the current cart",
                 ChatOptions = new ChatOptions
                 {
-                    Instructions = $"""
-                        You are a shopping suggestion assistant.
-                        CURRENT CART:
+                    Instructions = $@"
+                        You create shopping suggestions based on the promotion analysis from the
+                        previous agent and the current cart (which includes category info):
                         {cartJson}
-                        AVAILABLE CATEGORIES:
+
+                        Available categories in our store:
                         {categoriesJson}
-                        PROMOTION ANALYSIS:
-                        {promotionAnalysisJson}
-                        TASKS:
-                        1. Analyze the products already present in the cart.
-                        2. Find complementary or relevant products.
-                        3. Prioritize products that help activate near-miss promotions.
-                        4. Use available categories when generating suggestions.
-                        5. Return a maximum of 5 suggestions.
-                        6. Avoid duplicates.
-                        IMPORTANT:
-                        - Return ONLY valid JSON.
-                        - Do not include explanations outside JSON.
-                        - Prefer products related to promotions when possible.
-                        """,
-                    ResponseFormat = ChatResponseFormat.ForJsonSchema<SuggestionAnalysis>(),
+
+                        Rules:
+                        1. The previous agent's output contains active deals (already qualifying) and
+                           near-miss deals (almost qualifying). Use both to generate suggestions.
+                        2. For category-level promotions, suggest items from the SAME category that
+                           would help trigger the deal (e.g. adding another Electronics item to meet
+                           a category quantity threshold).
+                        3. Use GetRelevantProducts/GetPromotionsForProduct to find real products — only
+                           suggest products that the tools actually returned.
+                        4. Include calculated savings for each suggestion.
+                        5. Also suggest complementary products based on what's in the cart
+                           (e.g. phone case for a phone, charger for a laptop).
+                        6. Max 5 suggestions, prioritizing those with the highest savings (do not 
+                           include the suggestions with no savings).",
+
+                    ResponseFormat = ChatResponseFormat.ForJsonSchema<AnalysisResponse>(),
                     Tools =
                     [
                         AIFunctionFactory.Create(

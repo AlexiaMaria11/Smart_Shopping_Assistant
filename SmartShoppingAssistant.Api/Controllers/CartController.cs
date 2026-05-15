@@ -79,5 +79,12 @@ namespace SmartShoppingAssistant.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("analyze")]
+        public async Task<IActionResult> AnalyzeCart()
+        {
+            var analysisResponse = await cartService.AnalyzeCartAsync();
+            return Ok(analysisResponse);
+        }
     }
 }
