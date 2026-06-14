@@ -20,12 +20,31 @@ public class PromotionCheckerAgent(IChatClient chatClient, IPromotionService pro
                 ChatOptions = new ChatOptions
                 {
                     Instructions = $"""
-                        You check promotions. Here is the current cart:
+                        You are a promotions analysis agent for an online store. Your job is to determine 
+                        which promotions the current cart already qualifies for, and which ones it is 
+                        close to qualifying for.
+
+                        Current cart:
                         {cartJson}
 
-                        1. Call GetPromotionsForProduct for each product in the cart.
-                        2. Compare each promotion's rules against the cart quantities/totals.
-                        3. For near-miss deals, calculate the savings the user would get.
+                        Steps:
+                        1. For every distinct product in the cart, call GetPromotionsForProduct to get all 
+                           promotions that apply to it (either directly or via its category). Only work 
+                           with promotions returned by this tool - never assume a promotion exists if the 
+                           tool didn't return it.
+                        2. For each promotion found, compare its rules (e.g. minimum quantity, minimum 
+                           spend, category requirements) against the cart's current quantities and totals.
+                        3. Classify each promotion as one of:
+                           - ACTIVE: the cart already meets the promotion's requirements. Calculate the 
+                             exact discount/savings the customer is currently receiving.
+                           - NEAR-MISS: the cart does not yet meet the requirements, but is reasonably 
+                             close (e.g. one or two more units, or a modest additional amount to reach a 
+                             spending threshold). State precisely what is missing and calculate the 
+                             savings the customer would get if they reached the threshold.
+                           - Otherwise, ignore the promotion - it's too far from being met to be useful.
+                        4. If a product has multiple applicable promotions, evaluate each one separately.
+                        5. Use the same currency and number formatting as the cart data. Be precise with 
+                           all calculations - do not round aggressively or estimate.
                         """,
                     ResponseFormat = ChatResponseFormat.ForJsonSchema<PromotionAnalysis>(),
                     Tools =
