@@ -39,7 +39,7 @@ public static class DataSeeder
             {
                 Name        = "Wireless Headphones",
                 Description = "Noise-cancelling over-ear headphones with 30h battery life",
-                ImageUrl    = "https://placehold.co/400x400?text=Headphones",
+                ImageUrl    = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
                 Price       = 149.99m,
                 Categories  = [electronics]
             },
@@ -47,7 +47,7 @@ public static class DataSeeder
             {
                 Name        = "Smartphone Stand",
                 Description = "Adjustable aluminum stand for phones and tablets",
-                ImageUrl    = "https://placehold.co/400x400?text=Stand",
+                ImageUrl    = "https://images.unsplash.com/photo-1586816879360-004f5b0c51e5?w=400&h=400&fit=crop",
                 Price       = 24.99m,
                 Categories  = [electronics]
             },
@@ -55,7 +55,7 @@ public static class DataSeeder
             {
                 Name        = "Bluetooth Speaker",
                 Description = "Portable waterproof speaker with 360° sound",
-                ImageUrl    = "https://placehold.co/400x400?text=Speaker",
+                ImageUrl    = "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop",
                 Price       = 79.99m,
                 Categories  = [electronics]
             },
@@ -63,7 +63,7 @@ public static class DataSeeder
             {
                 Name        = "4K Webcam",
                 Description = "Ultra-HD webcam with built-in ring light and noise-cancelling mic",
-                ImageUrl    = "https://placehold.co/400x400?text=Webcam",
+                ImageUrl    = "https://images.unsplash.com/photo-1623949556303-5f6f5a8d4b3a?w=400&h=400&fit=crop",
                 Price       = 119.99m,
                 Categories  = [electronics]
             },
@@ -71,7 +71,7 @@ public static class DataSeeder
             {
                 Name        = "Mechanical Keyboard",
                 Description = "TKL mechanical keyboard with RGB backlight, red switches",
-                ImageUrl    = "https://placehold.co/400x400?text=Keyboard",
+                ImageUrl    = "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&h=400&fit=crop",
                 Price       = 89.99m,
                 Categories  = [electronics]
             },
@@ -79,7 +79,7 @@ public static class DataSeeder
             {
                 Name        = "Wireless Mouse",
                 Description = "Ergonomic wireless mouse with silent clicks, 18-month battery",
-                ImageUrl    = "https://placehold.co/400x400?text=Mouse",
+                ImageUrl    = "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop",
                 Price       = 39.99m,
                 Categories  = [electronics]
             },
@@ -87,7 +87,7 @@ public static class DataSeeder
             {
                 Name        = "USB-C Hub 7-in-1",
                 Description = "Hub with HDMI, 3× USB-A, SD card, USB-C PD and Ethernet",
-                ImageUrl    = "https://placehold.co/400x400?text=USB+Hub",
+                ImageUrl    = "https://images.unsplash.com/photo-1625948515291-69613efd103f?w=400&h=400&fit=crop",
                 Price       = 49.99m,
                 Categories  = [electronics]
             },
@@ -95,7 +95,7 @@ public static class DataSeeder
             {
                 Name        = "Smart LED Bulb",
                 Description = "16M colour Wi-Fi bulb, works with Alexa and Google Home",
-                ImageUrl    = "https://placehold.co/400x400?text=Smart+Bulb",
+                ImageUrl    = "https://images.unsplash.com/photo-1565636192335-2417c8c9a999?w=400&h=400&fit=crop",
                 Price       = 14.99m,
                 Categories  = [electronics, home]
             },
@@ -103,7 +103,7 @@ public static class DataSeeder
             {
                 Name        = "Action Camera",
                 Description = "4K 60fps waterproof action cam with image stabilisation",
-                ImageUrl    = "https://placehold.co/400x400?text=Action+Cam",
+                ImageUrl    = "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=400&fit=crop",
                 Price       = 199.99m,
                 Categories  = [electronics, sports]
             },
@@ -111,7 +111,7 @@ public static class DataSeeder
             {
                 Name        = "Portable Power Bank 20000mAh",
                 Description = "Fast-charge power bank with dual USB-A and USB-C output",
-                ImageUrl    = "https://placehold.co/400x400?text=Power+Bank",
+                ImageUrl    = "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400&h=400&fit=crop",
                 Price       = 44.99m,
                 Categories  = [electronics]
             },
@@ -121,7 +121,7 @@ public static class DataSeeder
             {
                 Name        = "Running T-Shirt",
                 Description = "Lightweight moisture-wicking running shirt",
-                ImageUrl    = "https://placehold.co/400x400?text=T-Shirt",
+                ImageUrl    = "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=400&h=400&fit=crop",
                 Price       = 29.99m,
                 Categories  = [clothing, sports]
             },
@@ -129,7 +129,7 @@ public static class DataSeeder
             {
                 Name        = "Yoga Pants",
                 Description = "High-waist stretch yoga pants for comfort and performance",
-                ImageUrl    = "https://placehold.co/400x400?text=Yoga+Pants",
+                ImageUrl    = "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=400&h=400&fit=crop",
                 Price       = 49.99m,
                 Categories  = [clothing, sports]
             },
@@ -137,7 +137,7 @@ public static class DataSeeder
             {
                 Name        = "Winter Puffer Jacket",
                 Description = "Lightweight down-fill jacket, water resistant, packable",
-                ImageUrl    = "https://placehold.co/400x400?text=Jacket",
+                ImageUrl    = "https://images.unsplash.com/photo-1551489186-cf8726f514f8?w=400&h=400&fit=crop",
                 Price       = 129.99m,
                 Categories  = [clothing]
             },
@@ -145,7 +145,7 @@ public static class DataSeeder
             {
                 Name        = "Classic Denim Jeans",
                 Description = "Straight-fit stretch denim, available in multiple washes",
-                ImageUrl    = "https://placehold.co/400x400?text=Jeans",
+                ImageUrl    = "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=400&fit=crop",
                 Price       = 59.99m,
                 Categories  = [clothing]
             },
@@ -153,7 +153,7 @@ public static class DataSeeder
             {
                 Name        = "Cotton Hoodie",
                 Description = "Premium 380gsm cotton fleece hoodie with kangaroo pocket",
-                ImageUrl    = "https://placehold.co/400x400?text=Hoodie",
+                ImageUrl    = "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop",
                 Price       = 54.99m,
                 Categories  = [clothing]
             },
@@ -161,7 +161,7 @@ public static class DataSeeder
             {
                 Name        = "Compression Socks (3-pack)",
                 Description = "Graduated compression socks for sport and travel",
-                ImageUrl    = "https://placehold.co/400x400?text=Socks",
+                ImageUrl    = "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?w=400&h=400&fit=crop",
                 Price       = 19.99m,
                 Categories  = [clothing, sports, health]
             },
@@ -171,7 +171,7 @@ public static class DataSeeder
             {
                 Name        = "Protein Bar (Box of 12)",
                 Description = "High-protein snack bars, chocolate flavour",
-                ImageUrl    = "https://placehold.co/400x400?text=Protein+Bar",
+                ImageUrl    = "https://images.unsplash.com/photo-1622484212385-aa5f1f8e1cc7?w=400&h=400&fit=crop",
                 Price       = 19.99m,
                 Categories  = [food, sports]
             },
@@ -179,7 +179,7 @@ public static class DataSeeder
             {
                 Name        = "Green Tea (100 bags)",
                 Description = "Organic green tea bags",
-                ImageUrl    = "https://placehold.co/400x400?text=Green+Tea",
+                ImageUrl    = "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=400&h=400&fit=crop",
                 Price       = 9.99m,
                 Categories  = [food]
             },
@@ -187,7 +187,7 @@ public static class DataSeeder
             {
                 Name        = "Cold-Brew Coffee Concentrate 500ml",
                 Description = "Ready-to-dilute cold brew, dark roast single origin",
-                ImageUrl    = "https://placehold.co/400x400?text=Cold+Brew",
+                ImageUrl    = "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=400&h=400&fit=crop",
                 Price       = 12.99m,
                 Categories  = [food]
             },
@@ -195,7 +195,7 @@ public static class DataSeeder
             {
                 Name        = "Whey Protein Powder 1kg",
                 Description = "Vanilla flavour whey isolate, 25g protein per serving",
-                ImageUrl    = "https://placehold.co/400x400?text=Protein+Powder",
+                ImageUrl    = "https://images.unsplash.com/photo-1579722820930-4f4e36b06414?w=400&h=400&fit=crop",
                 Price       = 49.99m,
                 Categories  = [food, sports, health]
             },
@@ -203,7 +203,7 @@ public static class DataSeeder
             {
                 Name        = "Mixed Nuts & Dried Fruit 500g",
                 Description = "Premium blend of cashews, almonds, cranberries and apricots",
-                ImageUrl    = "https://placehold.co/400x400?text=Nuts+Mix",
+                ImageUrl    = "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=400&h=400&fit=crop",
                 Price       = 14.99m,
                 Categories  = [food]
             },
@@ -211,7 +211,7 @@ public static class DataSeeder
             {
                 Name        = "Kombucha 6-Pack",
                 Description = "Raw fermented kombucha, ginger-lemon flavour, 330ml cans",
-                ImageUrl    = "https://placehold.co/400x400?text=Kombucha",
+                ImageUrl    = "https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=400&h=400&fit=crop",
                 Price       = 17.99m,
                 Categories  = [food, health]
             },
@@ -221,7 +221,7 @@ public static class DataSeeder
             {
                 Name        = "Resistance Bands Set",
                 Description = "Set of 5 resistance bands for home workouts",
-                ImageUrl    = "https://placehold.co/400x400?text=Bands",
+                ImageUrl    = "https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=400&h=400&fit=crop",
                 Price       = 34.99m,
                 Categories  = [sports]
             },
@@ -229,7 +229,7 @@ public static class DataSeeder
             {
                 Name        = "Foam Roller",
                 Description = "High-density EVA foam roller for muscle recovery, 60cm",
-                ImageUrl    = "https://placehold.co/400x400?text=Foam+Roller",
+                ImageUrl    = "https://images.unsplash.com/photo-1620188467120-5042ed1eb5da?w=400&h=400&fit=crop",
                 Price       = 24.99m,
                 Categories  = [sports, health]
             },
@@ -237,7 +237,7 @@ public static class DataSeeder
             {
                 Name        = "Adjustable Dumbbell 20kg",
                 Description = "Space-saving adjustable dumbbell, 2–20kg in 2kg increments",
-                ImageUrl    = "https://placehold.co/400x400?text=Dumbbell",
+                ImageUrl    = "https://images.unsplash.com/photo-1638536532686-d610adfc8e5c?w=400&h=400&fit=crop",
                 Price       = 149.99m,
                 Categories  = [sports]
             },
@@ -245,7 +245,7 @@ public static class DataSeeder
             {
                 Name        = "Jump Rope – Speed Cable",
                 Description = "Bearing-equipped speed jump rope, adjustable cable",
-                ImageUrl    = "https://placehold.co/400x400?text=Jump+Rope",
+                ImageUrl    = "https://images.unsplash.com/photo-1517344884509-a0c97ec11bcc?w=400&h=400&fit=crop",
                 Price       = 18.99m,
                 Categories  = [sports]
             },
@@ -253,7 +253,7 @@ public static class DataSeeder
             {
                 Name        = "Yoga Mat 6mm",
                 Description = "Non-slip TPE yoga mat with alignment lines, carry strap",
-                ImageUrl    = "https://placehold.co/400x400?text=Yoga+Mat",
+                ImageUrl    = "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400&h=400&fit=crop",
                 Price       = 39.99m,
                 Categories  = [sports]
             },
@@ -261,7 +261,7 @@ public static class DataSeeder
             {
                 Name        = "Running Water Bottle 750ml",
                 Description = "Insulated stainless steel bottle with flip straw lid",
-                ImageUrl    = "https://placehold.co/400x400?text=Water+Bottle",
+                ImageUrl    = "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=400&fit=crop",
                 Price       = 22.99m,
                 Categories  = [sports]
             },
@@ -271,7 +271,7 @@ public static class DataSeeder
             {
                 Name        = "Vitamin C Serum 30ml",
                 Description = "15% L-Ascorbic Acid brightening serum with hyaluronic acid",
-                ImageUrl    = "https://placehold.co/400x400?text=Serum",
+                ImageUrl    = "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop",
                 Price       = 34.99m,
                 Categories  = [beauty, health]
             },
@@ -279,7 +279,7 @@ public static class DataSeeder
             {
                 Name        = "Electric Toothbrush",
                 Description = "Sonic toothbrush with 3 modes, 4-week battery, 2 brush heads",
-                ImageUrl    = "https://placehold.co/400x400?text=Toothbrush",
+                ImageUrl    = "https://images.unsplash.com/photo-1559591935-c6c92c6d3047?w=400&h=400&fit=crop",
                 Price       = 44.99m,
                 Categories  = [beauty, health]
             },
@@ -287,7 +287,7 @@ public static class DataSeeder
             {
                 Name        = "SPF 50+ Sunscreen 100ml",
                 Description = "Lightweight, non-greasy mineral sunscreen, reef safe",
-                ImageUrl    = "https://placehold.co/400x400?text=Sunscreen",
+                ImageUrl    = "https://images.unsplash.com/photo-1556228852-6d35a585d566?w=400&h=400&fit=crop",
                 Price       = 16.99m,
                 Categories  = [beauty]
             },
@@ -295,7 +295,7 @@ public static class DataSeeder
             {
                 Name        = "Hair Diffuser Attachment",
                 Description = "Universal hair dryer diffuser for defined curls, reduces frizz",
-                ImageUrl    = "https://placehold.co/400x400?text=Diffuser",
+                ImageUrl    = "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=400&h=400&fit=crop",
                 Price       = 12.99m,
                 Categories  = [beauty]
             },
@@ -303,7 +303,7 @@ public static class DataSeeder
             {
                 Name        = "Natural Deodorant Stick",
                 Description = "Aluminium-free, baking-soda-free natural deodorant, 72h protection",
-                ImageUrl    = "https://placehold.co/400x400?text=Deodorant",
+                ImageUrl    = "https://images.unsplash.com/photo-1631730486572-226d1f595b68?w=400&h=400&fit=crop",
                 Price       = 11.99m,
                 Categories  = [beauty]
             },
@@ -313,7 +313,7 @@ public static class DataSeeder
             {
                 Name        = "Bamboo Cutting Board Set",
                 Description = "3-piece bamboo cutting board set, juice groove, non-slip feet",
-                ImageUrl    = "https://placehold.co/400x400?text=Cutting+Board",
+                ImageUrl    = "https://images.unsplash.com/photo-1594385208974-2e75f8d7bb18?w=400&h=400&fit=crop",
                 Price       = 29.99m,
                 Categories  = [home]
             },
@@ -321,7 +321,7 @@ public static class DataSeeder
             {
                 Name        = "Scented Soy Candle",
                 Description = "100% soy wax candle, 50h burn time, cedarwood & vanilla scent",
-                ImageUrl    = "https://placehold.co/400x400?text=Candle",
+                ImageUrl    = "https://images.unsplash.com/photo-1602874801006-e26c4c5b5e93?w=400&h=400&fit=crop",
                 Price       = 19.99m,
                 Categories  = [home]
             },
@@ -329,7 +329,7 @@ public static class DataSeeder
             {
                 Name        = "Stainless Steel French Press 1L",
                 Description = "Double-wall insulated French press, keeps coffee hot 2 hours",
-                ImageUrl    = "https://placehold.co/400x400?text=French+Press",
+                ImageUrl    = "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&h=400&fit=crop",
                 Price       = 34.99m,
                 Categories  = [home, food]
             },
@@ -337,7 +337,7 @@ public static class DataSeeder
             {
                 Name        = "Air Purifier – HEPA H13",
                 Description = "True HEPA H13 air purifier, covers up to 40m², whisper-quiet",
-                ImageUrl    = "https://placehold.co/400x400?text=Air+Purifier",
+                ImageUrl    = "https://images.unsplash.com/photo-1631083214070-9f6ec38a0440?w=400&h=400&fit=crop",
                 Price       = 149.99m,
                 Categories  = [home, health]
             },
@@ -345,7 +345,7 @@ public static class DataSeeder
             {
                 Name        = "Indoor Plant Pot Set (3 pcs)",
                 Description = "Minimalist ceramic pots with drainage holes, 10/14/18cm",
-                ImageUrl    = "https://placehold.co/400x400?text=Plant+Pots",
+                ImageUrl    = "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400&h=400&fit=crop",
                 Price       = 24.99m,
                 Categories  = [home]
             },
@@ -355,7 +355,7 @@ public static class DataSeeder
             {
                 Name        = "Dot-Grid Notebook A5",
                 Description = "160-page dot-grid notebook, 120gsm paper, lay-flat binding",
-                ImageUrl    = "https://placehold.co/400x400?text=Notebook",
+                ImageUrl    = "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400&h=400&fit=crop",
                 Price       = 12.99m,
                 Categories  = [books]
             },
@@ -363,7 +363,7 @@ public static class DataSeeder
             {
                 Name        = "Fountain Pen Starter Set",
                 Description = "Stainless steel nib fountain pen with 10 ink cartridges",
-                ImageUrl    = "https://placehold.co/400x400?text=Fountain+Pen",
+                ImageUrl    = "https://images.unsplash.com/photo-1583485088034-697b5bc54ccc?w=400&h=400&fit=crop",
                 Price       = 22.99m,
                 Categories  = [books]
             },
@@ -371,7 +371,7 @@ public static class DataSeeder
             {
                 Name        = "Self-Development Book Bundle (3 books)",
                 Description = "Curated set: Atomic Habits, Deep Work, and The Power of Now",
-                ImageUrl    = "https://placehold.co/400x400?text=Books",
+                ImageUrl    = "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=400&fit=crop",
                 Price       = 49.99m,
                 Categories  = [books]
             },
@@ -379,7 +379,7 @@ public static class DataSeeder
             {
                 Name        = "Sticky Notes Assorted Pack",
                 Description = "400 sticky notes in 4 sizes and 6 neon colours",
-                ImageUrl    = "https://placehold.co/400x400?text=Sticky+Notes",
+                ImageUrl    = "https://images.unsplash.com/photo-1586282391129-76a6df230234?w=400&h=400&fit=crop",
                 Price       = 7.99m,
                 Categories  = [books]
             },
@@ -389,7 +389,7 @@ public static class DataSeeder
             {
                 Name        = "Strategy Board Game",
                 Description = "Award-winning strategy board game for 2–4 players, age 10+",
-                ImageUrl    = "https://placehold.co/400x400?text=Board+Game",
+                ImageUrl    = "https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?w=400&h=400&fit=crop",
                 Price       = 44.99m,
                 Categories  = [toys]
             },
@@ -397,7 +397,7 @@ public static class DataSeeder
             {
                 Name        = "1000-Piece Jigsaw Puzzle",
                 Description = "High-quality 1000-piece puzzle, nature landscape theme",
-                ImageUrl    = "https://placehold.co/400x400?text=Puzzle",
+                ImageUrl    = "https://images.unsplash.com/photo-1606503825008-99e8dd6b6c14?w=400&h=400&fit=crop",
                 Price       = 19.99m,
                 Categories  = [toys]
             },
@@ -405,7 +405,7 @@ public static class DataSeeder
             {
                 Name        = "STEM Building Kit",
                 Description = "250-piece magnetic STEM building kit for children 6+",
-                ImageUrl    = "https://placehold.co/400x400?text=STEM+Kit",
+                ImageUrl    = "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=400&fit=crop",
                 Price       = 34.99m,
                 Categories  = [toys]
             },
@@ -413,7 +413,7 @@ public static class DataSeeder
             {
                 Name        = "Playing Cards – Premium Set",
                 Description = "2-deck set of casino-quality plastic-coated playing cards",
-                ImageUrl    = "https://placehold.co/400x400?text=Cards",
+                ImageUrl    = "https://images.unsplash.com/photo-1529480114316-1f9c1d0c4f7e?w=400&h=400&fit=crop",
                 Price       = 9.99m,
                 Categories  = [toys]
             },
@@ -423,7 +423,7 @@ public static class DataSeeder
             {
                 Name        = "Dash Camera 2K",
                 Description = "Front & rear 2K dash cam with night vision and loop recording",
-                ImageUrl    = "https://placehold.co/400x400?text=Dash+Cam",
+                ImageUrl    = "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=400&h=400&fit=crop",
                 Price       = 99.99m,
                 Categories  = [automotive, electronics]
             },
@@ -431,7 +431,7 @@ public static class DataSeeder
             {
                 Name        = "Car Phone Mount",
                 Description = "Magnetic dashboard phone mount, 360° rotation, universal fit",
-                ImageUrl    = "https://placehold.co/400x400?text=Car+Mount",
+                ImageUrl    = "https://images.unsplash.com/photo-1597762470488-3877b1f1cd55?w=400&h=400&fit=crop",
                 Price       = 16.99m,
                 Categories  = [automotive]
             },
@@ -439,7 +439,7 @@ public static class DataSeeder
             {
                 Name        = "Tyre Inflator – Portable",
                 Description = "Cordless electric tyre inflator with digital pressure gauge",
-                ImageUrl    = "https://placehold.co/400x400?text=Tyre+Inflator",
+                ImageUrl    = "https://images.unsplash.com/photo-1632823469850-1b7b1e8b7f8a?w=400&h=400&fit=crop",
                 Price       = 54.99m,
                 Categories  = [automotive]
             },
@@ -449,7 +449,7 @@ public static class DataSeeder
             {
                 Name        = "Multivitamin Daily (60 tablets)",
                 Description = "Complete A–Z multivitamin and mineral complex, 2-month supply",
-                ImageUrl    = "https://placehold.co/400x400?text=Multivitamin",
+                ImageUrl    = "https://images.unsplash.com/photo-1550572017-edd951b55104?w=400&h=400&fit=crop",
                 Price       = 14.99m,
                 Categories  = [health]
             },
@@ -457,7 +457,7 @@ public static class DataSeeder
             {
                 Name        = "Omega-3 Fish Oil 1000mg (90 caps)",
                 Description = "High-strength EPA & DHA fish oil capsules",
-                ImageUrl    = "https://placehold.co/400x400?text=Omega-3",
+                ImageUrl    = "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=400&h=400&fit=crop",
                 Price       = 19.99m,
                 Categories  = [health]
             },
@@ -465,7 +465,7 @@ public static class DataSeeder
             {
                 Name        = "Smart Body Scale",
                 Description = "Wi-Fi body composition scale: weight, BMI, body fat, muscle mass",
-                ImageUrl    = "https://placehold.co/400x400?text=Scale",
+                ImageUrl    = "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop",
                 Price       = 49.99m,
                 Categories  = [health, electronics]
             },
@@ -473,7 +473,7 @@ public static class DataSeeder
             {
                 Name        = "Acupressure Mat & Pillow Set",
                 Description = "Linen acupressure mat with 6210 pressure points, neck pillow included",
-                ImageUrl    = "https://placehold.co/400x400?text=Acupressure+Mat",
+                ImageUrl    = "https://images.unsplash.com/photo-1591343395082-e120087004b4?w=400&h=400&fit=crop",
                 Price       = 39.99m,
                 Categories  = [health, sports]
             },
@@ -481,7 +481,7 @@ public static class DataSeeder
             {
                 Name        = "Digital Thermometer",
                 Description = "Fast-read clinical thermometer, oral/axillary/rectal, 10s reading",
-                ImageUrl    = "https://placehold.co/400x400?text=Thermometer",
+                ImageUrl    = "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop",
                 Price       = 12.99m,
                 Categories  = [health]
             }
