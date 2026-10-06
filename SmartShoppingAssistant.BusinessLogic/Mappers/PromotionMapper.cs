@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Promotion;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
@@ -22,6 +22,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
 
                 ProductId = promotion.ProductId,
                 CategoryId = promotion.CategoryId,
+                CompanyId = promotion.CompanyId,
             };
         }
 
@@ -36,6 +37,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 RewardValue = dto.RewardValue,
                 ProductId = dto.ProductId,
                 CategoryId = dto.CategoryId,
+                CompanyId = dto.CompanyId,
                 IsActive = dto.IsActive
             };
         }
@@ -49,6 +51,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
             promotion.RewardValue = dto.RewardValue;
             promotion.ProductId = dto.ProductId;
             promotion.CategoryId = dto.CategoryId;
+            promotion.CompanyId = dto.CompanyId;
             promotion.IsActive = dto.IsActive;
         }
     }

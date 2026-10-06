@@ -1,4 +1,4 @@
-﻿namespace SmartShoppingAssistant.DataAccess.Entities
+namespace SmartShoppingAssistant.DataAccess.Entities
 {
     public class Product
     {
@@ -7,7 +7,9 @@
         public string? Description { get; set; }
         public string? ImageUrl { get; set; }
         public decimal Price { get; set; }
-        public CartItem CartItem { get; set; } = null!;
+        public int CompanyId { get; set; }
+        public Company Company { get; set; } = null!;
+        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
         public ICollection<Category> Categories { get; set; } = new List<Category>();
         public ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();
     }

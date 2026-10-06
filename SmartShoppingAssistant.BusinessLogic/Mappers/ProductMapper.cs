@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 using SmartShoppingAssistant.DataAccess.Entities;
@@ -16,6 +16,9 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 Description = product.Description ?? string.Empty,
                 ImageUrl = product.ImageUrl ?? string.Empty,
                 Price = product.Price,
+                CompanyId = product.CompanyId,
+                CompanyName = product.Company?.Name ?? string.Empty,
+                CompanySlug = product.Company?.Slug ?? string.Empty,
                 Categories = product.Categories.Select(CategoryMapper.ToGetDTO).ToList()
             };
         }
@@ -27,7 +30,8 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 Name = productDto.Name,
                 Description = productDto.Description,
                 ImageUrl = productDto.ImageUrl,
-                Price = productDto.Price
+                Price = productDto.Price,
+                CompanyId = productDto.CompanyId
             };
         }
 
@@ -37,6 +41,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
             product.Description = productDto.Description;
             product.ImageUrl = productDto.ImageUrl;
             product.Price = productDto.Price;
+            product.CompanyId = productDto.CompanyId;
         }
     }
 }

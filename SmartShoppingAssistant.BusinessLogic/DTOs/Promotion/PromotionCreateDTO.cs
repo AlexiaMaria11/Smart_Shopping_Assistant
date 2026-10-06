@@ -1,4 +1,4 @@
-﻿using SmartShoppingAssistant.DataAccess.Entities.Enums;
+using SmartShoppingAssistant.DataAccess.Entities.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace SmartShoppingAssistant.BusinessLogic.DTOs.Promotion
@@ -15,6 +15,7 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs.Promotion
 
         public int? ProductId { get; set; }
         public int? CategoryId { get; set; }
+        public int? CompanyId { get; set; }
 
         public bool IsActive { get; set; } = true;
     }

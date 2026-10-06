@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SmartShoppingAssistant.Api.Extensions;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
+using SmartShoppingAssistant.DataAccess.Entities;
 
 namespace SmartShoppingAssistant.Api.Controllers
 {
@@ -8,78 +11,53 @@ namespace SmartShoppingAssistant.Api.Controllers
     [ApiController]
     public class ProductsController(IProductService productService) : ControllerBase
     {
+        private const string Managers = $"{Roles.Admin},{Roles.Seller}";
+
         [HttpGet]
         public async Task<ActionResult<List<ProductGetDTO>>> GetAll(
              string? name,
              int? categoryId,
              decimal? minPrice,
-             decimal? maxPrice)
+             decimal? maxPrice,
+             int? companyId)
         {
-            try
-            {
-                var products = await productService.GetAllAsync(categoryId, name, minPrice, maxPrice);
-                return Ok(products);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(await productService.GetAllAsync(categoryId, name, minPrice, maxPrice, companyId));
         }
 
-        [HttpGet("{id}")]
+        [Authorize(Roles = Managers)]
+        [HttpGet("manage")]
+        public async Task<ActionResult<List<ProductGetDTO>>> GetManaged()
+        {
+            return Ok(await productService.GetManagedAsync(User.ToCurrentUser()));
+        }
+
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<ProductGetDTO>> GetById(int id)
         {
-            try
-            {
-                var product = await productService.GetByIdAsync(id);
-                return Ok(product);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return Ok(await productService.GetByIdAsync(id));
         }
 
+        [Authorize(Roles = Managers)]
         [HttpPost]
         public async Task<ActionResult<ProductGetDTO>> Create(ProductCreateDTO dto)
         {
-            try
-            {
-                var created = await productService.CreateAsync(dto);
-                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var created = await productService.CreateAsync(dto, User.ToCurrentUser());
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
-        [HttpPut("{id}")]
+        [Authorize(Roles = Managers)]
+        [HttpPut("{id:int}")]
         public async Task<ActionResult<ProductGetDTO>> Update(int id, ProductUpdateDTO dto)
         {
-            try
-            {
-                var updated = await productService.UpdateAsync(id, dto);
-                return Ok(updated);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(await productService.UpdateAsync(id, dto, User.ToCurrentUser()));
         }
 
-        [HttpDelete("{id}")]
+        [Authorize(Roles = Managers)]
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            try
-            {
-                await productService.DeleteAsync(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await productService.DeleteAsync(id, User.ToCurrentUser());
+            return NoContent();
         }
     }
 }

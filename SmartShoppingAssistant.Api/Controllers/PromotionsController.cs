@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SmartShoppingAssistant.Api.Extensions;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Promotion;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
+using SmartShoppingAssistant.DataAccess.Entities;
 
 namespace SmartShoppingAssistant.Api.Controllers
 {
@@ -8,79 +11,48 @@ namespace SmartShoppingAssistant.Api.Controllers
     [ApiController]
     public class PromotionsController(IPromotionService promotionService) : ControllerBase
     {
+        private const string Managers = $"{Roles.Admin},{Roles.Seller}";
+
         [HttpGet]
         public async Task<ActionResult<List<PromotionGetDTO>>> GetAll(bool activeOnly)
         {
-            try
-            {
-                var promotions = await promotionService.GetAllAsync(activeOnly);
-                return Ok(promotions);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(await promotionService.GetAllAsync(activeOnly));
         }
 
-        [HttpGet("{id}")]
+        [Authorize(Roles = Managers)]
+        [HttpGet("manage")]
+        public async Task<ActionResult<List<PromotionGetDTO>>> GetManaged()
+        {
+            return Ok(await promotionService.GetManagedAsync(User.ToCurrentUser()));
+        }
+
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<PromotionGetDTO>> GetById(int id)
         {
-            try
-            {
-                var promotion = await promotionService.GetByIdAsync(id);
-                return Ok(promotion);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return Ok(await promotionService.GetByIdAsync(id));
         }
 
+        [Authorize(Roles = Managers)]
         [HttpPost]
         public async Task<ActionResult<PromotionGetDTO>> Create(PromotionCreateDTO dto)
         {
-            try
-            {
-                var createdPromotion = await promotionService.CreateAsync(dto);
-
-                return CreatedAtAction(
-                    nameof(GetById),
-                    new { id = createdPromotion.Id },
-                    createdPromotion
-                );
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var created = await promotionService.CreateAsync(dto, User.ToCurrentUser());
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
-        [HttpPut("{id}")]
+        [Authorize(Roles = Managers)]
+        [HttpPut("{id:int}")]
         public async Task<ActionResult<PromotionGetDTO>> Update(int id, PromotionUpdateDTO dto)
         {
-            try
-            {
-                var updatedPromotion = await promotionService.UpdateAsync(id, dto);
-                return Ok(updatedPromotion);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return Ok(await promotionService.UpdateAsync(id, dto, User.ToCurrentUser()));
         }
 
-        [HttpDelete("{id}")]
+        [Authorize(Roles = Managers)]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await promotionService.DeleteAsync(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await promotionService.DeleteAsync(id, User.ToCurrentUser());
+            return NoContent();
         }
     }
 }

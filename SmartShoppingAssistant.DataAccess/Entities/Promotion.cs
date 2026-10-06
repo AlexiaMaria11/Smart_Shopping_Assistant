@@ -1,4 +1,4 @@
-﻿using SmartShoppingAssistant.DataAccess.Entities.Enums;
+using SmartShoppingAssistant.DataAccess.Entities.Enums;
 
 namespace SmartShoppingAssistant.DataAccess.Entities
 {
@@ -14,6 +14,8 @@ namespace SmartShoppingAssistant.DataAccess.Entities
         public Product? Product { get; set; }
         public int? CategoryId { get; set; }
         public Category? Category { get; set; }
+        public int? CompanyId { get; set; }
+        public Company? Company { get; set; }
         public bool IsActive { get; set; }
     }
 }

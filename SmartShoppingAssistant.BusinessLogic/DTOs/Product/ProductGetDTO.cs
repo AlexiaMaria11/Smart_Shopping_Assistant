@@ -1,4 +1,4 @@
-﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
+using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
 
 namespace SmartShoppingAssistant.BusinessLogic.DTOs.Product
 {
@@ -9,6 +9,9 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs.Product
         public string Description { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
         public decimal Price { get; set; }
+        public int CompanyId { get; set; }
+        public string CompanyName { get; set; } = null!;
+        public string CompanySlug { get; set; } = null!;
         public List<CategoryGetDTO> Categories { get; set; } = new();
     }
 }

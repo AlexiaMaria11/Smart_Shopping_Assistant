@@ -1,18 +1,31 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SmartShoppingAssistant.DataAccess.Entities;
 using SmartShoppingAssistant.DataAccess.Entities.Enums;
 
 namespace SmartShoppingAssistant.DataAccess;
 
-public static class DataSeeder
+public static partial class DataSeeder
 {
-    public static async Task SeedAsync(SmartShoppingAssistantDbContext context)
+    public static async Task SeedAsync(
+        SmartShoppingAssistantDbContext context,
+        UserManager<AppUser> userManager,
+        RoleManager<IdentityRole<int>> roleManager)
     {
         await context.Database.MigrateAsync();
 
-        if (await context.Categories.AnyAsync())
-            return;
+        var companies = await SeedCompaniesAsync(context);
 
+        if (!await context.Categories.AnyAsync())
+            await SeedCatalogAsync(context, companies);
+
+        await MovePlaceholderProductsAsync(context, companies);
+
+        await SeedUsersAsync(userManager, roleManager, companies);
+    }
+
+    private static async Task SeedCatalogAsync(SmartShoppingAssistantDbContext context, Dictionary<string, Company> companies)
+    {
         // ── Categories ────────────────────────────────────────────────────────
         var electronics = new Category { Name = "Electronics", Description = "Gadgets and electronic devices" };
         var clothing = new Category { Name = "Clothing", Description = "Apparel and fashion items" };
@@ -486,6 +499,9 @@ public static class DataSeeder
                 Categories  = [health]
             }
         };
+
+        foreach (var product in products)
+            product.CompanyId = CompanyForCategory(product.Categories.First().Name, companies).Id;
 
         await context.Products.AddRangeAsync(products);
         await context.SaveChangesAsync();

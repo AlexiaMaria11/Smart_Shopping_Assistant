@@ -11,6 +11,8 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs.Product
         [Required]
         [Range(0.01, double.MaxValue)]
         public decimal Price { get; set; }
+        // Ignored for sellers: their own company is used
+        public int CompanyId { get; set; }
         [Required]
         public List<int> CategoryIds { get; set; } = new List<int>();
     }
