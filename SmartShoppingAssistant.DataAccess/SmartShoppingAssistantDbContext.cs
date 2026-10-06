@@ -1,15 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SmartShoppingAssistant.DataAccess.Entities;
 
 namespace SmartShoppingAssistant.DataAccess;
 
 public class SmartShoppingAssistantDbContext(DbContextOptions<SmartShoppingAssistantDbContext> options)
-    : DbContext(options)
+    : IdentityDbContext<AppUser, IdentityRole<int>, int>(options)
 {
     public DbSet<Product> Products { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<CartItem> CartItems { get; set; } = null!;
     public DbSet<Promotion> Promotions { get; set; } = null!;
+    public DbSet<Company> Companies { get; set; } = null!;
+    public DbSet<FavoriteItem> FavoriteItems { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

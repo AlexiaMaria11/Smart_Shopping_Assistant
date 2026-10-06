@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Category;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
+using SmartShoppingAssistant.DataAccess.Entities;
 
 namespace SmartShoppingAssistant.Api.Controllers
 {
@@ -8,75 +10,39 @@ namespace SmartShoppingAssistant.Api.Controllers
     [ApiController]
     public class CategoriesController(ICategoryService categoryService) : ControllerBase
     {
-
         [HttpGet]
         public async Task<ActionResult<List<CategoryGetDTO>>> GetAll()
         {
-            try
-            {
-                var categories = await categoryService.GetAllAsync();
-                return Ok(categories);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(await categoryService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryGetDTO>> GetById(int id)
         {
-            try
-            {
-                var category = await categoryService.GetByIdAsync(id);
-                return Ok(category);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return Ok(await categoryService.GetByIdAsync(id));
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         public async Task<ActionResult<CategoryGetDTO>> Create(CategoryCreateDTO dto)
         {
-            try
-            {
-                var created = await categoryService.CreateAsync(dto);
-                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var created = await categoryService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id}")]
         public async Task<ActionResult<CategoryGetDTO>> Update(int id, CategoryUpdateDTO dto)
         {
-            try
-            {
-                var updated = await categoryService.UpdateAsync(id, dto);
-                return Ok(updated);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return Ok(await categoryService.UpdateAsync(id, dto));
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await categoryService.DeleteAsync(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await categoryService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

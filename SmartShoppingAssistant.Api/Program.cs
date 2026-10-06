@@ -1,11 +1,19 @@
+using SmartShoppingAssistant.Api.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using OpenAI;
 using SmartShoppingAssistant.BusinessLogic.Agents;
+using SmartShoppingAssistant.BusinessLogic.Models;
 using SmartShoppingAssistant.BusinessLogic.Services;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
 using SmartShoppingAssistant.DataAccess;
+using SmartShoppingAssistant.DataAccess.Entities;
 using SmartShoppingAssistant.DataAccess.Repositories;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,22 +22,87 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Adds the "Authorize" button in Swagger, paste the token from /api/auth/login there
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 var connectionString = builder.Configuration.GetConnectionString("SmartShoppingAssistantContext");
 
 builder.Services.AddDbContext<SmartShoppingAssistantDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+// ── Authentication ─────────────────────────────────────────────────────────
+builder.Services.AddIdentityCore<AppUser>(options =>
+    {
+        options.User.RequireUniqueEmail = true;
+        options.Password.RequiredLength = 8;
+        options.Password.RequireDigit = true;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+    })
+    .AddRoles<IdentityRole<int>>()
+    .AddEntityFrameworkStores<SmartShoppingAssistantDbContext>();
+
+var jwtSection = builder.Configuration.GetSection(JwtSettings.SectionName);
+builder.Services.Configure<JwtSettings>(jwtSection);
+var jwtSettings = jwtSection.Get<JwtSettings>() ?? throw new Exception("JWT settings are not configured.");
+if (string.IsNullOrWhiteSpace(jwtSettings.Key) || jwtSettings.Key.Length < 32)
+    throw new Exception("Jwt:Key must be configured and have at least 32 characters.");
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtSettings.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromMinutes(1),
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
+    });
+builder.Services.AddAuthorization();
+
+// ── Repositories & services ────────────────────────────────────────────────
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
 builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var openAiApiKey = builder.Configuration["OpenAI:ApiKey"] ?? throw new Exception("OpenAI API key is not configured.");
 
@@ -57,7 +130,9 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<SmartShoppingAssistantDbContext>();
-    await DataSeeder.SeedAsync(db);
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+    await DataSeeder.SeedAsync(db, userManager, roleManager);
 }
 
 // Configure the HTTP request pipeline.
@@ -67,10 +142,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAnyOrigin");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
