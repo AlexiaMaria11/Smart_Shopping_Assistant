@@ -12,7 +12,7 @@ public class BaseRepository<TEntity>(SmartShoppingAssistantDbContext context) : 
     public async Task<TEntity> GetByIdAsync(int id)
     {
         return await context.Set<TEntity>().FindAsync(id)
-            ?? throw new Exception($"Entity with id {id} not found");
+            ?? throw new KeyNotFoundException($"{typeof(TEntity).Name} with id {id} not found");
     }
 
     public async Task<List<TEntity>> GetAllAsync()
@@ -37,7 +37,7 @@ public class BaseRepository<TEntity>(SmartShoppingAssistantDbContext context) : 
     public async Task DeleteAsync(int id)
     {
         var entity = await context.Set<TEntity>().FindAsync(id)
-            ?? throw new Exception($"Entity with id {id} not found");
+            ?? throw new KeyNotFoundException($"{typeof(TEntity).Name} with id {id} not found");
 
         context.Set<TEntity>().Remove(entity);
         await context.SaveChangesAsync();
