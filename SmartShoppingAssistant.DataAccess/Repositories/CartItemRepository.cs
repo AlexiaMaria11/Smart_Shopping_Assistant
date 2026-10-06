@@ -1,55 +1,38 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SmartShoppingAssistant.DataAccess.Entities;
 
 namespace SmartShoppingAssistant.DataAccess.Repositories;
 
-public class CartItemRepository
-    : BaseRepository<CartItem>, ICartItemRepository
+public class CartItemRepository(SmartShoppingAssistantDbContext context)
+    : BaseRepository<CartItem>(context), ICartItemRepository
 {
-    private readonly SmartShoppingAssistantDbContext _context;
-
-    public CartItemRepository(SmartShoppingAssistantDbContext context) : base(context)
-    {
-        _context = context;
-    }
-    private IQueryable<CartItem> WithProduct() =>
-        GetAllAsQueryable().Include(ci => ci.Product);
-
-    public async Task<List<CartItem>> GetAllWithProductAsync()
-    {
-        return await WithProduct().ToListAsync();
-    }
-
-    public async Task<CartItem> GetByIdWithProductAsync(int id)
-    {
-        var cartItem = await _context.Set<CartItem>()
-            .Include(c => c.Product)
-            .FirstOrDefaultAsync(c => c.Id == id);
-
-        if (cartItem == null)
-        {
-            throw new KeyNotFoundException($"Cart item with id {id} not found");
-        }
-
-        return cartItem;
-    }    
-
-    public async Task<List<CartItem>> GetAllWithProductAndCategoriesAsync()
-    {
-        return await _context.Set<CartItem>()
-            .Include(c => c.Product)
+    private IQueryable<CartItem> ForUser(int userId) =>
+        GetAllAsQueryable()
+            .Where(ci => ci.UserId == userId)
+            .Include(ci => ci.Product)
                 .ThenInclude(p => p.Categories)
-            .ToListAsync();
+            .Include(ci => ci.Product)
+                .ThenInclude(p => p.Company);
+
+    public async Task<List<CartItem>> GetForUserAsync(int userId)
+    {
+        return await ForUser(userId).OrderBy(ci => ci.Id).ToListAsync();
     }
 
-    public async Task<CartItem?> GetByProductIdAsync(int productId)
+    public async Task<CartItem?> GetByProductIdAsync(int userId, int productId)
     {
-        return await WithProduct().FirstOrDefaultAsync(ci => ci.ProductId == productId);
+        return await ForUser(userId).FirstOrDefaultAsync(ci => ci.ProductId == productId);
     }
 
-    public async Task ClearAsync()
+    // Looking the item up by user as well means nobody can edit someone else's cart by guessing ids
+    public async Task<CartItem> GetForUserByIdAsync(int userId, int itemId)
     {
-        _context.CartItems.RemoveRange(_context.CartItems);
-        await _context.SaveChangesAsync();
+        return await ForUser(userId).FirstOrDefaultAsync(ci => ci.Id == itemId)
+            ?? throw new KeyNotFoundException($"Cart item with id {itemId} not found");
+    }
+
+    public async Task ClearAsync(int userId)
+    {
+        await context.CartItems.Where(ci => ci.UserId == userId).ExecuteDeleteAsync();
     }
 }

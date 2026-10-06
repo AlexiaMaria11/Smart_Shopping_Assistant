@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SmartShoppingAssistant.Api.Extensions;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Cart;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
 
@@ -6,85 +8,44 @@ namespace SmartShoppingAssistant.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CartController(ICartService cartService) : ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<CartGetDTO>> GetCart()
         {
-            try
-            {
-                var cart = await cartService.GetCartAsync();
-                return Ok(cart);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(await cartService.GetCartAsync(User.GetUserId()));
         }
 
         [HttpPost("items")]
         public async Task<ActionResult<CartGetDTO>> AddItem(CartItemCreateDTO dto)
         {
-            try
-            {
-                var cart = await cartService.AddItemAsync(dto);
-                return Ok(cart);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(await cartService.AddItemAsync(User.GetUserId(), dto));
         }
 
         [HttpPut("items/{itemId}")]
-        public async Task<ActionResult<CartGetDTO>> UpdateItem(
-            int itemId,
-            CartItemUpdateDTO dto)
+        public async Task<ActionResult<CartGetDTO>> UpdateItem(int itemId, CartItemUpdateDTO dto)
         {
-            try
-            {
-                var cart = await cartService.UpdateItemAsync(itemId, dto);
-                return Ok(cart);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return Ok(await cartService.UpdateItemAsync(User.GetUserId(), itemId, dto));
         }
 
         [HttpDelete("items/{itemId}")]
         public async Task<ActionResult<CartGetDTO>> RemoveItem(int itemId)
         {
-            try
-            {
-                var cart = await cartService.RemoveItemAsync(itemId);
-                return Ok(cart);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return Ok(await cartService.RemoveItemAsync(User.GetUserId(), itemId));
         }
 
         [HttpDelete]
         public async Task<IActionResult> ClearCart()
         {
-            try
-            {
-                await cartService.ClearCartAsync();
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await cartService.ClearCartAsync(User.GetUserId());
+            return NoContent();
         }
 
         [HttpPost("analyze")]
-        public async Task<IActionResult> AnalyzeCart()
+        public async Task<ActionResult<AnalysisResponse>> AnalyzeCart()
         {
-            var analysisResponse = await cartService.AnalyzeCartAsync();
-            return Ok(analysisResponse);
+            return Ok(await cartService.AnalyzeCartAsync(User.GetUserId()));
         }
     }
 }

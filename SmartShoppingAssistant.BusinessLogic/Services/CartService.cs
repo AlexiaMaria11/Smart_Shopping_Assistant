@@ -1,4 +1,5 @@
-﻿using Microsoft.Agents.AI.Workflows;
+using SmartShoppingAssistant.BusinessLogic.Helpers;
+using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
 using SmartShoppingAssistant.BusinessLogic.Agents;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Cart;
@@ -14,9 +15,9 @@ namespace SmartShoppingAssistant.BusinessLogic.Services;
 
 public class CartService(ICartItemRepository cartItemRepository, IProductRepository productRepository, IPromotionRepository promotionRepository, ICategoryRepository categoryRepository, IPromotionCheckerAgent promotionCheckerAgent, ISuggestionComposerAgent suggestionComposerAgent) : ICartService
 {
-    public async Task<CartGetDTO> GetCartAsync()
+    public async Task<CartGetDTO> GetCartAsync(int userId)
     {
-        var cartItems = await cartItemRepository.GetAllWithProductAndCategoriesAsync();
+        var cartItems = await cartItemRepository.GetForUserAsync(userId);
         var promotions = (await promotionRepository.GetAllAsync()).Where(p => p.IsActive).ToList();
 
         var subtotal = cartItems.Sum(i => i.Product.Price * i.Quantity);
@@ -24,7 +25,7 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
         var appliedPromotions = promotions
             .Select(p => (Promotion: p, Discount: CalculateDiscount(p, cartItems, subtotal)))
             .Where(x => x.Discount > 0)
-            .Select(x => new AppliedPromotionDTO { PromotionName = x.Promotion.Name, Discount = -x.Discount })
+            .Select(x => new AppliedPromotionDTO { PromotionId = x.Promotion.Id, PromotionName = x.Promotion.Name, Discount = -x.Discount })
             .ToList();
 
         var totalDiscount = Math.Max(appliedPromotions.Sum(x => x.Discount), -subtotal);
@@ -39,11 +40,14 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
         };
     }
 
-    public async Task<CartGetDTO> AddItemAsync(CartItemCreateDTO dto)
+    public async Task<CartGetDTO> AddItemAsync(int userId, CartItemCreateDTO dto)
     {
+        if (dto.Quantity < 1)
+            throw new ArgumentException("Quantity must be at least 1.");
+
         await productRepository.GetByIdAsync(dto.ProductId);
 
-        var existing = await cartItemRepository.GetByProductIdAsync(dto.ProductId);
+        var existing = await cartItemRepository.GetByProductIdAsync(userId, dto.ProductId);
 
         if (existing != null)
         {
@@ -54,6 +58,7 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
         {
             var item = new CartItem
             {
+                UserId = userId,
                 ProductId = dto.ProductId,
                 Quantity = dto.Quantity
             };
@@ -61,45 +66,54 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
             await cartItemRepository.AddAsync(item);
         }
 
-        return await GetCartAsync();
+        return await GetCartAsync(userId);
     }
 
-    public async Task<CartGetDTO> UpdateItemAsync(int itemId, CartItemUpdateDTO dto)
+    public async Task<CartGetDTO> UpdateItemAsync(int userId, int itemId, CartItemUpdateDTO dto)
     {
-        var item = await cartItemRepository.GetByIdWithProductAsync(itemId);
+        if (dto.Quantity < 1)
+            throw new ArgumentException("Quantity must be at least 1.");
+
+        var item = await cartItemRepository.GetForUserByIdAsync(userId, itemId);
 
         item.Quantity = dto.Quantity;
 
         await cartItemRepository.UpdateAsync(item);
 
-        return await GetCartAsync();
+        return await GetCartAsync(userId);
     }
 
-    public async Task<CartGetDTO> RemoveItemAsync(int itemId)
+    public async Task<CartGetDTO> RemoveItemAsync(int userId, int itemId)
     {
+        await cartItemRepository.GetForUserByIdAsync(userId, itemId);
         await cartItemRepository.DeleteAsync(itemId);
-        return await GetCartAsync();
+        return await GetCartAsync(userId);
     }
 
-    public Task ClearCartAsync() => cartItemRepository.ClearAsync();
+    public Task ClearCartAsync(int userId) => cartItemRepository.ClearAsync(userId);
 
     private static decimal CalculateDiscount(Promotion promo, List<CartItem> cartItems, decimal cartTotal)
     {
+        // A company promotion only ever applies to that company's own products
+        var eligible = promo.CompanyId.HasValue
+            ? cartItems.Where(i => i.Product.CompanyId == promo.CompanyId.Value).ToList()
+            : cartItems;
+
         List<CartItem> applicable;
         if (promo.ProductId.HasValue)
         {
-            var item = cartItems.FirstOrDefault(i => i.ProductId == promo.ProductId.Value);
+            var item = eligible.FirstOrDefault(i => i.ProductId == promo.ProductId.Value);
             applicable = item is null ? [] : [item];
         }
         else if (promo.CategoryId.HasValue)
         {
-            applicable = cartItems
+            applicable = eligible
                 .Where(i => i.Product.Categories.Any(c => c.Id == promo.CategoryId.Value))
                 .ToList();
         }
         else
         {
-            applicable = cartItems;
+            applicable = eligible;
         }
 
         if (applicable.Count == 0) return 0;
@@ -130,9 +144,12 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
             _ => 0
         };
     }
-    public async Task<AnalysisResponse> AnalyzeCartAsync()
+    public async Task<AnalysisResponse> AnalyzeCartAsync(int userId)
     {
-        var cart = await cartItemRepository.GetAllWithProductAndCategoriesAsync();
+        var cart = await cartItemRepository.GetForUserAsync(userId);
+        if (cart.Count == 0)
+            throw new BusinessException("Your cart is empty. Add some products before running the analysis.");
+
         var categories = await categoryRepository.GetAllAsync();
 
         var cartJson = JsonSerializer.Serialize(cart.Select(c => new
@@ -141,6 +158,7 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
             c.Product.Price,
             c.Quantity,
             LineTotal = c.Product.Price*c.Quantity,
+            Seller = c.Product.Company.Name,
             CategoryIds = c.Product.Categories.Select(cat => new {CategoryId = cat.Id, CategoryName = cat.Name}).ToList(),
         }));
 
@@ -162,6 +180,18 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
             new(ChatRole.User, "Analyze the current cart and suggest improvements.")
         };
 
+        try
+        {
+            return await RunWorkflowAsync(workflow, chatMessage);
+        }
+        catch (Exception ex) when (ex is not BusinessException)
+        {
+            throw new BusinessException("The AI assistant is not available right now. Please try again later.", ex);
+        }
+    }
+
+    private static async Task<AnalysisResponse> RunWorkflowAsync(Workflow workflow, List<ChatMessage> chatMessage)
+    {
         await using var result = await InProcessExecution.RunStreamingAsync(workflow, chatMessage);
 
         await result.TrySendMessageAsync(new TurnToken(emitEvents:true));
