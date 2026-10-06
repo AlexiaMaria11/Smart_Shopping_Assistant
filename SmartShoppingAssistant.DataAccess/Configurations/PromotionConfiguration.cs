@@ -29,13 +29,13 @@ namespace SmartShoppingAssistant.DataAccess.Configurations
                 .WithMany(pr=>pr.Promotions)
                 .HasForeignKey(p => p.ProductId)
                 .IsRequired(false)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(p=>p.Category)
                 .WithMany(pr=>pr.Promotions)
                 .HasForeignKey(p=>p.CategoryId)
                 .IsRequired(false)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
