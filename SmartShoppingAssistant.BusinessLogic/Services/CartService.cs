@@ -45,9 +45,10 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
         if (dto.Quantity < 1)
             throw new ArgumentException("Quantity must be at least 1.");
 
-        await productRepository.GetByIdAsync(dto.ProductId);
+        var product = await productRepository.GetByIdAsync(dto.ProductId);
 
         var existing = await cartItemRepository.GetByProductIdAsync(userId, dto.ProductId);
+        EnsureInStock(product, (existing?.Quantity ?? 0) + dto.Quantity);
 
         if (existing != null)
         {
@@ -75,6 +76,7 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
             throw new ArgumentException("Quantity must be at least 1.");
 
         var item = await cartItemRepository.GetForUserByIdAsync(userId, itemId);
+        EnsureInStock(item.Product, dto.Quantity);
 
         item.Quantity = dto.Quantity;
 
@@ -91,6 +93,17 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
     }
 
     public Task ClearCartAsync(int userId) => cartItemRepository.ClearAsync(userId);
+
+    private static void EnsureInStock(Product product, int wantedQuantity)
+    {
+        if (product.StockQuantity <= 0)
+            throw new BusinessException($"{product.Name} is out of stock.");
+
+        if (wantedQuantity > product.StockQuantity)
+            throw new BusinessException(product.StockQuantity == 1
+                ? $"Only 1 {product.Name} is left in stock."
+                : $"Only {product.StockQuantity} units of {product.Name} are left in stock.");
+    }
 
     private static decimal CalculateDiscount(Promotion promo, List<CartItem> cartItems, decimal cartTotal)
     {

@@ -11,6 +11,8 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs.Product
         [Required]
         [Range(0.01, double.MaxValue)]
         public decimal Price { get; set; }
+        [Range(0, 100000, ErrorMessage = "Stock must be between 0 and 100000.")]
+        public int StockQuantity { get; set; }
         // Ignored for sellers: their own company is used
         public int CompanyId { get; set; }
         [Required]

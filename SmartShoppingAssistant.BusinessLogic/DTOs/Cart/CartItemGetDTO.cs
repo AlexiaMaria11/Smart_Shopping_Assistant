@@ -1,4 +1,4 @@
-﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
+using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 
 namespace SmartShoppingAssistant.BusinessLogic.DTOs.Cart
 {
@@ -10,5 +10,6 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs.Cart
         public string ProductName { get; set; } = null!;
         public decimal Price { get; set; }
         public decimal Subtotal { get; set; }
+        public int AvailableStock { get; set; }
     }
 }

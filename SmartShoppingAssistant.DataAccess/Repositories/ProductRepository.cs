@@ -47,6 +47,7 @@ public class ProductRepository
     public async Task<List<Product>> GetByCategoriesAsync(List<int> categoryIds)
     {
         return await WithCategories()
+            .Where(p => p.StockQuantity > 0 && p.Company.Status == CompanyStatus.Approved)
             .Where(p => p.Categories.Any(c => categoryIds.Contains(c.Id)))
             .ToListAsync();
     }

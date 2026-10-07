@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartShoppingAssistant.DataAccess.Entities;
 
@@ -22,6 +22,10 @@ namespace SmartShoppingAssistant.DataAccess.Configurations
             builder.Property(p => p.Price)
                 .IsRequired()
                 .HasPrecision(10, 2);
+
+            builder.Property(p => p.StockQuantity)
+                .IsRequired()
+                .HasDefaultValue(0);
 
             builder.Property(p => p.ImageUrl)
                 .HasMaxLength(500);

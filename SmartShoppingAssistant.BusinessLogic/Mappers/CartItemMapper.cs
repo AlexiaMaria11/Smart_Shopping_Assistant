@@ -1,4 +1,4 @@
-﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Cart;
+using SmartShoppingAssistant.BusinessLogic.DTOs.Cart;
 using SmartShoppingAssistant.DataAccess.Entities;
 
 namespace SmartShoppingAssistant.BusinessLogic.Mappers
@@ -14,7 +14,8 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 ProductName = cartItem.Product.Name,
                 Price = cartItem.Product.Price,
                 Quantity = cartItem.Quantity,
-                Subtotal = cartItem.Product.Price * cartItem.Quantity
+                Subtotal = cartItem.Product.Price * cartItem.Quantity,
+                AvailableStock = cartItem.Product.StockQuantity
             };
         }
     }

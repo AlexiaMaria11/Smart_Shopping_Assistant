@@ -16,6 +16,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 Description = product.Description ?? string.Empty,
                 ImageUrl = product.ImageUrl ?? string.Empty,
                 Price = product.Price,
+                StockQuantity = product.StockQuantity,
                 CompanyId = product.CompanyId,
                 CompanyName = product.Company?.Name ?? string.Empty,
                 CompanySlug = product.Company?.Slug ?? string.Empty,
@@ -31,6 +32,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 Description = productDto.Description,
                 ImageUrl = productDto.ImageUrl,
                 Price = productDto.Price,
+                StockQuantity = productDto.StockQuantity,
                 CompanyId = productDto.CompanyId
             };
         }
@@ -41,6 +43,7 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
             product.Description = productDto.Description;
             product.ImageUrl = productDto.ImageUrl;
             product.Price = productDto.Price;
+            product.StockQuantity = productDto.StockQuantity;
             product.CompanyId = productDto.CompanyId;
         }
     }

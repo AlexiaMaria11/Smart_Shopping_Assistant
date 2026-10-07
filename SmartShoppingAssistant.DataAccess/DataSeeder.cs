@@ -500,8 +500,12 @@ public static partial class DataSeeder
             }
         };
 
-        foreach (var product in products)
-            product.CompanyId = CompanyForCategory(product.Categories.First().Name, companies).Id;
+        for (var i = 0; i < products.Count; i++)
+        {
+            products[i].CompanyId = CompanyForCategory(products[i].Categories.First().Name, companies).Id;
+            // Mostly plenty of stock, a few almost sold out or sold out
+            products[i].StockQuantity = i % 13 == 12 ? 0 : i % 7 == 6 ? 3 : 10 + (i * 7) % 50;
+        }
 
         await context.Products.AddRangeAsync(products);
         await context.SaveChangesAsync();
