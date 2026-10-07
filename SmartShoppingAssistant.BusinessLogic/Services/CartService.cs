@@ -29,6 +29,8 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
             .ToList();
 
         var totalDiscount = Math.Max(appliedPromotions.Sum(x => x.Discount), -subtotal);
+        var total = subtotal + totalDiscount;
+        var shippingCost = ShippingPolicy.CostFor(total);
 
         return new CartGetDTO
         {
@@ -36,7 +38,10 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
             Subtotal = subtotal,
             AppliedPromotions = appliedPromotions,
             TotalDiscount = totalDiscount,
-            Total = subtotal + totalDiscount
+            Total = total,
+            ShippingCost = shippingCost,
+            FreeShippingRemaining = total > 0 ? Math.Max(0, ShippingPolicy.FreeShippingThreshold - total) : 0,
+            TotalWithShipping = total + shippingCost
         };
     }
 
@@ -50,22 +55,7 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
         var existing = await cartItemRepository.GetByProductIdAsync(userId, dto.ProductId);
         EnsureInStock(product, (existing?.Quantity ?? 0) + dto.Quantity);
 
-        if (existing != null)
-        {
-            existing.Quantity += dto.Quantity;
-            await cartItemRepository.UpdateAsync(existing);
-        }
-        else
-        {
-            var item = new CartItem
-            {
-                UserId = userId,
-                ProductId = dto.ProductId,
-                Quantity = dto.Quantity
-            };
-
-            await cartItemRepository.AddAsync(item);
-        }
+        await cartItemRepository.AddOrIncreaseAsync(userId, dto.ProductId, dto.Quantity);
 
         return await GetCartAsync(userId);
     }
@@ -145,7 +135,7 @@ public class CartService(ICartItemRepository cartItemRepository, IProductReposit
 
         return promo.Reward switch
         {
-            PromotionReward.PercentDiscount => applicableTotal * promo.RewardValue / 100m,
+            PromotionReward.PercentDiscount => Math.Round(applicableTotal * promo.RewardValue / 100m, 2, MidpointRounding.AwayFromZero),
             PromotionReward.FreeItems when promo.ProductId.HasValue =>
                 Math.Min(promo.RewardValue, applicable[0].Quantity) * applicable[0].Product.Price,
             PromotionReward.FreeItems =>

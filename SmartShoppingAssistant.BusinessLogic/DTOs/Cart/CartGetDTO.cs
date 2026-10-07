@@ -1,4 +1,4 @@
-﻿using SmartShoppingAssistant.BusinessLogic.DTOs.Promotion;
+using SmartShoppingAssistant.BusinessLogic.DTOs.Promotion;
 
 namespace SmartShoppingAssistant.BusinessLogic.DTOs.Cart
 {
@@ -13,5 +13,11 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs.Cart
         public decimal TotalDiscount { get; set; }
 
         public decimal Total { get; set; }
+
+        public decimal ShippingCost { get; set; }
+
+        public decimal FreeShippingRemaining { get; set; }
+
+        public decimal TotalWithShipping { get; set; }
     }
 }

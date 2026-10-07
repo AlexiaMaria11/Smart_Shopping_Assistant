@@ -31,6 +31,33 @@ public class CartItemRepository(SmartShoppingAssistantDbContext context)
             ?? throw new KeyNotFoundException($"Cart item with id {itemId} not found");
     }
 
+    // Safe for double clicks: two requests adding the same product end up as one row with both quantities
+    public async Task AddOrIncreaseAsync(int userId, int productId, int quantity)
+    {
+        if (await IncreaseAsync(userId, productId, quantity))
+            return;
+
+        context.CartItems.Add(new CartItem { UserId = userId, ProductId = productId, Quantity = quantity });
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            // The other request inserted the row first (unique index on user + product)
+            context.ChangeTracker.Clear();
+            await IncreaseAsync(userId, productId, quantity);
+        }
+    }
+
+    private async Task<bool> IncreaseAsync(int userId, int productId, int quantity)
+    {
+        var updated = await context.CartItems
+            .Where(ci => ci.UserId == userId && ci.ProductId == productId)
+            .ExecuteUpdateAsync(s => s.SetProperty(ci => ci.Quantity, ci => ci.Quantity + quantity));
+        return updated > 0;
+    }
+
     public async Task ClearAsync(int userId)
     {
         await context.CartItems.Where(ci => ci.UserId == userId).ExecuteDeleteAsync();

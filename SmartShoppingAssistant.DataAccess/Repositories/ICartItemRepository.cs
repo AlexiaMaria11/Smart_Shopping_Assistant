@@ -8,4 +8,5 @@ public interface ICartItemRepository : IRepository<CartItem>
     Task<CartItem?> GetByProductIdAsync(int userId, int productId);
     Task<CartItem> GetForUserByIdAsync(int userId, int itemId);
     Task ClearAsync(int userId);
+    Task AddOrIncreaseAsync(int userId, int productId, int quantity);
 }
