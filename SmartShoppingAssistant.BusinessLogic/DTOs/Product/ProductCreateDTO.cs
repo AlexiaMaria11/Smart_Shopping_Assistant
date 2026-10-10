@@ -17,5 +17,8 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs.Product
         public int CompanyId { get; set; }
         [Required]
         public List<int> CategoryIds { get; set; } = new List<int>();
+        // The gallery, in the order they are shown. Exactly one is the main image.
+        public List<ProductImageDTO> Images { get; set; } = new();
+
     }
 }

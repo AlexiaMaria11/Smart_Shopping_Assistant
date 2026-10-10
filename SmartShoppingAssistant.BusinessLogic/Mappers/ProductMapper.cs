@@ -20,7 +20,23 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                 CompanyId = product.CompanyId,
                 CompanyName = product.Company?.Name ?? string.Empty,
                 CompanySlug = product.Company?.Slug ?? string.Empty,
-                Categories = product.Categories.Select(CategoryMapper.ToGetDTO).ToList()
+                Categories = product.Categories.Select(CategoryMapper.ToGetDTO).ToList(),
+                Images = product.Images
+                    .OrderBy(i => i.SortOrder)
+                    .ThenBy(i => i.Id)
+                    .Select(ToImageDTO)
+                    .ToList()
+            };
+        }
+
+        public static ProductImageDTO ToImageDTO(ProductImage image)
+        {
+            return new ProductImageDTO
+            {
+                Id = image.Id,
+                Url = image.Url,
+                AltText = image.AltText,
+                IsMain = image.IsMain
             };
         }
 

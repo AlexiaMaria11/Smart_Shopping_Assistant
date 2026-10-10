@@ -10,7 +10,10 @@ public class ProductRepository
     : BaseRepository<Product>, IProductRepository
 {
     private IQueryable<Product> WithCategories() =>
-        GetAllAsQueryable().Include(p => p.Categories).Include(p => p.Company);
+        GetAllAsQueryable()
+            .Include(p => p.Categories)
+            .Include(p => p.Company)
+            .Include(p => p.Images);
 
     private readonly SmartShoppingAssistantDbContext _context;
 
@@ -72,5 +75,43 @@ public class ProductRepository
             .Where(p => p.Categories.Any(c => c.Id == categoryId))
             .Take(10)
             .ToListAsync();
+    }
+
+    // "Customers also looked at": same categories first, then anything else from the same seller
+    public async Task<List<Product>> GetSimilarAsync(int productId, int take)
+    {
+        var product = await _context.Products
+            .Where(p => p.Id == productId)
+            .Select(p => new { p.CompanyId, CategoryIds = p.Categories.Select(c => c.Id).ToList() })
+            .FirstOrDefaultAsync();
+
+        if (product is null)
+            return [];
+
+        var categoryIds = product.CategoryIds;
+
+        var sameCategory = await WithCategories()
+            .Where(p => p.Id != productId && p.Company.Status == CompanyStatus.Approved)
+            .Where(p => p.Categories.Any(c => categoryIds.Contains(c.Id)))
+            // In stock first, then the ones sharing the most categories
+            .OrderByDescending(p => p.StockQuantity > 0)
+            .ThenByDescending(p => p.Categories.Count(c => categoryIds.Contains(c.Id)))
+            .ThenBy(p => p.Id)
+            .Take(take)
+            .ToListAsync();
+
+        if (sameCategory.Count >= take)
+            return sameCategory;
+
+        var alreadyFound = sameCategory.Select(p => p.Id).Append(productId).ToList();
+        var sameSeller = await WithCategories()
+            .Where(p => p.CompanyId == product.CompanyId && !alreadyFound.Contains(p.Id))
+            .Where(p => p.Company.Status == CompanyStatus.Approved)
+            .OrderByDescending(p => p.StockQuantity > 0)
+            .ThenBy(p => p.Id)
+            .Take(take - sameCategory.Count)
+            .ToListAsync();
+
+        return [.. sameCategory, .. sameSeller];
     }
 }

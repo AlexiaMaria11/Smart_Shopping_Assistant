@@ -1,4 +1,5 @@
 using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
+using SmartShoppingAssistant.BusinessLogic.Helpers;
 using SmartShoppingAssistant.BusinessLogic.Mappers;
 using SmartShoppingAssistant.BusinessLogic.Models;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
@@ -39,6 +40,7 @@ public class ProductService(IProductRepository productRepository, ICategoryRepos
 
         var product = ProductMapper.ToEntity(dto);
         product.Categories = await categoryRepository.GetByIdsAsync(dto.CategoryIds);
+        ProductGallery.Apply(product, dto.Images, dto.ImageUrl);
         var created = await productRepository.AddAsync(product);
         return await GetByIdAsync(created.Id);
     }
@@ -54,6 +56,7 @@ public class ProductService(IProductRepository productRepository, ICategoryRepos
 
         ProductMapper.UpdateEntity(product, dto);
         product.Categories = await categoryRepository.GetByIdsAsync(dto.CategoryIds);
+        ProductGallery.Apply(product, dto.Images, dto.ImageUrl);
         await productRepository.UpdateAsync(product);
         return await GetByIdAsync(id);
     }
@@ -80,6 +83,12 @@ public class ProductService(IProductRepository productRepository, ICategoryRepos
     public async Task<List<ProductGetDTO>> GetByCategoriesAsync(List<int> categoryIds)
     {
         var products = await productRepository.GetByCategoriesAsync(categoryIds);
+        return products.Select(ProductMapper.ToGetDTO).ToList();
+    }
+
+    public async Task<List<ProductGetDTO>> GetSimilarAsync(int id, int take = 4)
+    {
+        var products = await productRepository.GetSimilarAsync(id, take);
         return products.Select(ProductMapper.ToGetDTO).ToList();
     }
 }

@@ -32,6 +32,13 @@ namespace SmartShoppingAssistant.Api.Controllers
             return Ok(await promotionService.GetByIdAsync(id));
         }
 
+        // The promotions that apply to one product, shown on the product page
+        [HttpGet("product/{productId:int}")]
+        public async Task<ActionResult<List<PromotionGetDTO>>> GetForProduct(int productId)
+        {
+            return Ok(await promotionService.GetForProductAsync(productId));
+        }
+
         [Authorize(Roles = Managers)]
         [HttpPost]
         public async Task<ActionResult<PromotionGetDTO>> Create(PromotionCreateDTO dto)

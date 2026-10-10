@@ -37,6 +37,13 @@ namespace SmartShoppingAssistant.Api.Controllers
             return Ok(await productService.GetByIdAsync(id));
         }
 
+        // "Customers also looked at" on the product page
+        [HttpGet("{id:int}/similar")]
+        public async Task<ActionResult<List<ProductGetDTO>>> GetSimilar(int id, int take = 4)
+        {
+            return Ok(await productService.GetSimilarAsync(id, Math.Clamp(take, 1, 12)));
+        }
+
         [Authorize(Roles = Managers)]
         [HttpPost]
         public async Task<ActionResult<ProductGetDTO>> Create(ProductCreateDTO dto)

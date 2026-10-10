@@ -14,5 +14,8 @@ namespace SmartShoppingAssistant.BusinessLogic.DTOs.Product
         public string CompanyName { get; set; } = null!;
         public string CompanySlug { get; set; } = null!;
         public List<CategoryGetDTO> Categories { get; set; } = new();
+        // The gallery, in the order they are shown. Exactly one is the main image.
+        public List<ProductImageDTO> Images { get; set; } = new();
+
     }
 }

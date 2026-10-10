@@ -21,6 +21,8 @@ public static partial class DataSeeder
 
         await MovePlaceholderProductsAsync(context, companies);
 
+        await SeedProductImagesAsync(context);
+
         await SeedUsersAsync(userManager, roleManager, companies);
     }
 

@@ -10,6 +10,7 @@ namespace SmartShoppingAssistant.DataAccess.Entities
         public int StockQuantity { get; set; }
         public int CompanyId { get; set; }
         public Company Company { get; set; } = null!;
+        public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
         public ICollection<Category> Categories { get; set; } = new List<Category>();
         public ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();

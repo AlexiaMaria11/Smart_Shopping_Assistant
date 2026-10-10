@@ -14,5 +14,6 @@ namespace SmartShoppingAssistant.BusinessLogic.Services.Interfaces
         Task<List<ProductGetDTO>> SearchAsync(string query);
         Task<List<ProductGetDTO>> GetByCategoryAsync(int categoryId);
         Task<List<ProductGetDTO>> GetByCategoriesAsync(List<int> categoryIds);
+        Task<List<ProductGetDTO>> GetSimilarAsync(int id, int take = 4);
     }
 }
