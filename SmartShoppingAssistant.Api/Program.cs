@@ -13,6 +13,7 @@ using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
 using SmartShoppingAssistant.DataAccess;
 using SmartShoppingAssistant.DataAccess.Entities;
 using SmartShoppingAssistant.DataAccess.Repositories;
+using System.ClientModel;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -106,11 +107,29 @@ builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
-var openAiApiKey = builder.Configuration["OpenAI:ApiKey"] ?? throw new Exception("OpenAI API key is not configured.");
+// ── AI assistant (optional) ────────────────────────────────────────────────
+// Without a key the shop runs normally and the frontend hides the AI features
+var aiSettings = builder.Configuration.GetSection(AiSettings.SectionName).Get<AiSettings>() ?? new AiSettings();
+builder.Services.AddSingleton(aiSettings);
 
-var openAiModel = builder.Configuration["OpenAI:Model"] ?? "gpt-4o";
+if (aiSettings.IsConfigured)
+{
+    var clientOptions = new OpenAIClientOptions();
+    if (!string.IsNullOrWhiteSpace(aiSettings.Endpoint))
+        clientOptions.Endpoint = new Uri(aiSettings.Endpoint);
 
-builder.Services.AddSingleton<IChatClient>(new OpenAIClient(openAiApiKey).GetChatClient(openAiModel).AsIChatClient().AsBuilder().UseFunctionInvocation().Build());
+    builder.Services.AddSingleton<IChatClient>(
+        new OpenAIClient(new ApiKeyCredential(aiSettings.ApiKey!), clientOptions)
+            .GetChatClient(aiSettings.Model)
+            .AsIChatClient()
+            .AsBuilder()
+            .UseFunctionInvocation()
+            .Build());
+}
+else
+{
+    builder.Services.AddSingleton<IChatClient, DisabledChatClient>();
+}
 
 builder.Services.AddScoped<IPromotionCheckerAgent, PromotionCheckerAgent>();
 builder.Services.AddScoped<ISuggestionComposerAgent, SuggestionComposerAgent>();

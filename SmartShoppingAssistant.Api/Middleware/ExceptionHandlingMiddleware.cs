@@ -23,6 +23,9 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
 
             if (status == HttpStatusCode.InternalServerError)
                 logger.LogError(ex, "Unhandled exception");
+            else if (ex.InnerException is not null)
+                // The user gets a friendly message; the real cause (e.g. an invalid AI key) goes to the log
+                logger.LogWarning(ex.InnerException, "{Message}", ex.Message);
 
             context.Response.StatusCode = (int)status;
             await context.Response.WriteAsJsonAsync(new
