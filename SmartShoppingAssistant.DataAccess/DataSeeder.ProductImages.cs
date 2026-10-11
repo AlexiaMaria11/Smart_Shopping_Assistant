@@ -5,86 +5,81 @@ namespace SmartShoppingAssistant.DataAccess;
 
 public static partial class DataSeeder
 {
-    private const string UnsplashSize = "?w=800&h=800&fit=crop";
-
-    // A few demo products get a real gallery, so the product page has thumbnails to show.
-    // The first url of each is an extra picture; the product's own ImageUrl stays the main one.
-    private static readonly Dictionary<string, string[]> ExtraImages = new()
+    // The other views of each piece, in the order the house photographs them.
+    // The first url is the product's own ImageUrl and stays the main image.
+    private static readonly Dictionary<string, string[]> Galleries = new()
     {
-        ["Wireless Headphones"] =
-        [
-            "photo-1484704849700-f032a568e944",
-            "photo-1546435770-a3e426bf472b",
-            "photo-1583394838336-acd977736f90"
-        ],
-        ["Mechanical Keyboard"] =
-        [
-            "photo-1595225476474-87563907a212",
-            "photo-1618384887929-16ec33fab9ef",
-            "photo-1511467687858-23d96c32e4ae"
-        ],
-        ["Yoga Mat 6mm"] =
-        [
-            "photo-1601445638532-3c6f6c3aa1d6",
-            "photo-1588286840104-8957b019727f"
-        ],
-        ["Scented Soy Candle"] =
-        [
-            "photo-1603988363607-e1e4a66962c6",
-            "photo-1602143407151-7111542de6e8"
-        ],
-        ["Running T-Shirt"] =
-        [
-            "photo-1571781926291-c477ebfd024b",
-            "photo-1596462502278-27bfdc403348"
-        ],
-        ["Bluetooth Speaker"] =
-        [
-            "photo-1545205597-3d9d02c29597",
-            "photo-1583743814966-8936f5b7be1a"
-        ]
+        ["White Gold Earrings"] = ["/catalog/teilor/white-gold-earrings-2.webp", "/catalog/teilor/white-gold-earrings-3.webp", "/catalog/teilor/white-gold-earrings-4.webp"],
+        ["Yellow Gold Earrings"] = ["/catalog/teilor/yellow-gold-earrings-2.webp", "/catalog/teilor/yellow-gold-earrings-3.webp", "/catalog/teilor/yellow-gold-earrings-4.webp"],
+        ["Rose Gold Earrings"] = ["/catalog/teilor/rose-gold-earrings-2.webp", "/catalog/teilor/rose-gold-earrings-3.webp", "/catalog/teilor/rose-gold-earrings-4.webp"],
+        ["Braided Yellow Gold Ring"] = ["/catalog/teilor/braided-yellow-gold-ring-2.webp", "/catalog/teilor/braided-yellow-gold-ring-3.webp", "/catalog/teilor/braided-yellow-gold-ring-4.webp"],
+        ["Braided Rose Gold Ring"] = ["/catalog/teilor/braided-rose-gold-ring-2.webp", "/catalog/teilor/braided-rose-gold-ring-3.webp", "/catalog/teilor/braided-rose-gold-ring-4.webp"],
+        ["White Gold Ring"] = ["/catalog/teilor/white-gold-ring-2.webp", "/catalog/teilor/white-gold-ring-3.webp", "/catalog/teilor/white-gold-ring-4.webp"],
+        ["White Gold Cross Pendant"] = ["/catalog/teilor/white-gold-cross-pendant-2.webp", "/catalog/teilor/white-gold-cross-pendant-3.webp", "/catalog/teilor/white-gold-cross-pendant-4.webp"],
+        ["Clover Necklace with Diamonds"] = ["/catalog/teilor/clover-necklace-with-diamonds-2.webp", "/catalog/teilor/clover-necklace-with-diamonds-3.webp", "/catalog/teilor/clover-necklace-with-diamonds-4.webp"],
+        ["White Gold Tennis Bracelet"] = ["/catalog/teilor/white-gold-tennis-bracelet-2.webp", "/catalog/teilor/white-gold-tennis-bracelet-3.webp"],
+        ["White Gold Bracelet"] = ["/catalog/teilor/white-gold-bracelet-2.webp", "/catalog/teilor/white-gold-bracelet-3.webp"],
+        ["Knit Fit and Flare Dress"] = ["/catalog/liu-jo/knit-fit-and-flare-dress-2.jpg", "/catalog/liu-jo/knit-fit-and-flare-dress-3.jpg", "/catalog/liu-jo/knit-fit-and-flare-dress-4.jpg"],
+        ["Knit Dress with Rhinestones"] = ["/catalog/liu-jo/knit-dress-with-rhinestones-2.jpg", "/catalog/liu-jo/knit-dress-with-rhinestones-3.jpg", "/catalog/liu-jo/knit-dress-with-rhinestones-4.jpg"],
+        ["Short Dress in Milano Stitch"] = ["/catalog/liu-jo/short-dress-in-milano-stitch-2.jpg", "/catalog/liu-jo/short-dress-in-milano-stitch-3.jpg", "/catalog/liu-jo/short-dress-in-milano-stitch-4.jpg"],
+        ["Balloon Dress in Knit"] = ["/catalog/liu-jo/balloon-dress-in-knit-2.jpg", "/catalog/liu-jo/balloon-dress-in-knit-3.jpg", "/catalog/liu-jo/balloon-dress-in-knit-4.jpg"],
+        ["Dress with Embroidered Cut-Outs"] = ["/catalog/liu-jo/dress-with-embroidered-cut-outs-2.jpg", "/catalog/liu-jo/dress-with-embroidered-cut-outs-3.jpg", "/catalog/liu-jo/dress-with-embroidered-cut-outs-4.jpg"],
+        ["Medium Crossbody Bag with Pocket"] = ["/catalog/liu-jo/medium-crossbody-bag-with-pocket-2.jpg", "/catalog/liu-jo/medium-crossbody-bag-with-pocket-3.jpg", "/catalog/liu-jo/medium-crossbody-bag-with-pocket-4.jpg"],
+        ["LaPuffy Bag in Printed Denim"] = ["/catalog/liu-jo/lapuffy-bag-in-printed-denim-2.jpg", "/catalog/liu-jo/lapuffy-bag-in-printed-denim-3.jpg", "/catalog/liu-jo/lapuffy-bag-in-printed-denim-4.jpg"],
+        ["Small Crossbody Bag"] = ["/catalog/liu-jo/small-crossbody-bag-2.jpg", "/catalog/liu-jo/small-crossbody-bag-3.jpg", "/catalog/liu-jo/small-crossbody-bag-4.jpg"],
+        ["Quilted Hobo Bag"] = ["/catalog/liu-jo/quilted-hobo-bag-2.jpg", "/catalog/liu-jo/quilted-hobo-bag-3.jpg", "/catalog/liu-jo/quilted-hobo-bag-4.jpg"],
+        ["Small Tote Bag"] = ["/catalog/liu-jo/small-tote-bag-2.jpg", "/catalog/liu-jo/small-tote-bag-3.jpg", "/catalog/liu-jo/small-tote-bag-4.jpg"],
+        ["Midi Coat in Wool Cloth"] = ["/catalog/liu-jo/midi-coat-in-wool-cloth-2.jpg", "/catalog/liu-jo/midi-coat-in-wool-cloth-3.jpg", "/catalog/liu-jo/midi-coat-in-wool-cloth-4.jpg"],
+        ["Long Oversized Wool Coat"] = ["/catalog/liu-jo/long-oversized-wool-coat-2.jpg", "/catalog/liu-jo/long-oversized-wool-coat-3.jpg", "/catalog/liu-jo/long-oversized-wool-coat-4.jpg"],
+        ["Faux Fur Coat"] = ["/catalog/liu-jo/faux-fur-coat-2.jpg", "/catalog/liu-jo/faux-fur-coat-3.jpg", "/catalog/liu-jo/faux-fur-coat-4.jpg"],
+        ["Warm Ankle Boots"] = ["/catalog/liu-jo/warm-ankle-boots-2.jpg", "/catalog/liu-jo/warm-ankle-boots-3.jpg", "/catalog/liu-jo/warm-ankle-boots-4.jpg"],
+        ["Ankle Boots with Zip"] = ["/catalog/liu-jo/ankle-boots-with-zip-2.jpg", "/catalog/liu-jo/ankle-boots-with-zip-3.jpg", "/catalog/liu-jo/ankle-boots-with-zip-4.jpg"],
+        ["Combat Boots with Logo"] = ["/catalog/liu-jo/combat-boots-with-logo-2.jpg", "/catalog/liu-jo/combat-boots-with-logo-3.jpg", "/catalog/liu-jo/combat-boots-with-logo-4.jpg"],
+        ["Sneakers with Patch"] = ["/catalog/liu-jo/sneakers-with-patch-2.jpg", "/catalog/liu-jo/sneakers-with-patch-3.jpg", "/catalog/liu-jo/sneakers-with-patch-4.jpg"],
+        ["Sneakers with Glitter Logo"] = ["/catalog/liu-jo/sneakers-with-glitter-logo-2.jpg", "/catalog/liu-jo/sneakers-with-glitter-logo-3.jpg", "/catalog/liu-jo/sneakers-with-glitter-logo-4.jpg"],
+        ["Sneakers with Teddy Details"] = ["/catalog/liu-jo/sneakers-with-teddy-details-2.jpg", "/catalog/liu-jo/sneakers-with-teddy-details-3.jpg", "/catalog/liu-jo/sneakers-with-teddy-details-4.jpg"],
+        ["Animal-Print Sneakers"] = ["/catalog/liu-jo/animal-print-sneakers-2.jpg", "/catalog/liu-jo/animal-print-sneakers-3.jpg", "/catalog/liu-jo/animal-print-sneakers-4.jpg"],
     };
 
-    // Products used to have a single ImageUrl. Each one becomes the main image of its gallery.
     private static async Task SeedProductImagesAsync(SmartShoppingAssistantDbContext context)
     {
-        var products = await context.Products
-            .Include(p => p.Images)
-            .ToListAsync();
+        if (await context.ProductImages.AnyAsync())
+            return;
+
+        var products = await context.Products.ToListAsync();
+        var images = new List<ProductImage>();
 
         foreach (var product in products)
         {
-            if (product.Images.Count == 0 && !string.IsNullOrWhiteSpace(product.ImageUrl))
-            {
-                product.Images.Add(new ProductImage
-                {
-                    Url = product.ImageUrl,
-                    AltText = product.Name,
-                    SortOrder = 0,
-                    IsMain = true
-                });
-            }
-
-            if (!ExtraImages.TryGetValue(product.Name, out var extras))
+            if (string.IsNullOrWhiteSpace(product.ImageUrl))
                 continue;
 
-            var sortOrder = product.Images.Count;
-            foreach (var photo in extras)
+            images.Add(new ProductImage
             {
-                var url = $"https://images.unsplash.com/{photo}{UnsplashSize}";
-                if (product.Images.Any(i => i.Url == url))
-                    continue;
+                ProductId = product.Id,
+                Url = product.ImageUrl,
+                AltText = product.Name,
+                SortOrder = 0,
+                IsMain = true
+            });
 
-                product.Images.Add(new ProductImage
+            if (!Galleries.TryGetValue(product.Name, out var extra))
+                continue;
+
+            for (var i = 0; i < extra.Length; i++)
+            {
+                images.Add(new ProductImage
                 {
-                    Url = url,
+                    ProductId = product.Id,
+                    Url = extra[i],
                     AltText = product.Name,
-                    SortOrder = sortOrder++,
+                    SortOrder = i + 1,
                     IsMain = false
                 });
             }
         }
 
+        await context.ProductImages.AddRangeAsync(images);
         await context.SaveChangesAsync();
     }
 }
