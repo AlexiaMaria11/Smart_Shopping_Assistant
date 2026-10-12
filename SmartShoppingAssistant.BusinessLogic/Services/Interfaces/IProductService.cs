@@ -1,5 +1,7 @@
+using SmartShoppingAssistant.BusinessLogic.DTOs;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 using SmartShoppingAssistant.BusinessLogic.Models;
+using SmartShoppingAssistant.DataAccess.Entities.Enums;
 
 namespace SmartShoppingAssistant.BusinessLogic.Services.Interfaces
 {
@@ -15,5 +17,16 @@ namespace SmartShoppingAssistant.BusinessLogic.Services.Interfaces
         Task<List<ProductGetDTO>> GetByCategoryAsync(int categoryId);
         Task<List<ProductGetDTO>> GetByCategoriesAsync(List<int> categoryIds);
         Task<List<ProductGetDTO>> GetSimilarAsync(int id, int take = 4);
+        Task<PagedResult<ProductGetDTO>> GetPagedAsync(
+            List<int>? categoryIds,
+            string? name,
+            decimal? minPrice,
+            decimal? maxPrice,
+            List<int>? companyIds,
+            bool? inStockOnly,
+            ProductSortOption sort,
+            int page,
+            int pageSize);
+        Task<PriceRangeDTO> GetPriceRangeAsync();
     }
 }

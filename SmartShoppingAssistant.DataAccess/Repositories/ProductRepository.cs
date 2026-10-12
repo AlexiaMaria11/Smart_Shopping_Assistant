@@ -115,4 +115,72 @@ public class ProductRepository
 
         return [.. sameCategory, .. sameSeller];
     }
+
+    public async Task<(List<Product> Items, int TotalCount)> GetPagedAsync(
+        List<int>? categoryIds,
+        string? name,
+        decimal? minPrice,
+        decimal? maxPrice,
+        List<int>? companyIds,
+        bool? inStockOnly,
+        ProductSortOption sort,
+        int page,
+        int pageSize)
+    {
+        var query = GetAllAsQueryable().Where(p => p.Company.Status == CompanyStatus.Approved);
+
+        if (companyIds is { Count: > 0 })
+            query = query.Where(p => companyIds.Contains(p.CompanyId));
+
+        if (categoryIds is { Count: > 0 })
+            query = query.Where(p => p.Categories.Any(c => categoryIds.Contains(c.Id)));
+
+        if (!string.IsNullOrWhiteSpace(name))
+            query = query.Where(p => p.Name.Contains(name));
+
+        if (minPrice.HasValue)
+            query = query.Where(p => p.Price >= minPrice.Value);
+
+        if (maxPrice.HasValue)
+            query = query.Where(p => p.Price <= maxPrice.Value);
+
+        if (inStockOnly == true)
+            query = query.Where(p => p.StockQuantity > 0);
+
+        query = sort switch
+        {
+            ProductSortOption.PriceDesc => query.OrderByDescending(p => p.Price).ThenBy(p => p.Id),
+            ProductSortOption.NameAsc => query.OrderBy(p => p.Name).ThenBy(p => p.Id),
+            ProductSortOption.NameDesc => query.OrderByDescending(p => p.Name).ThenBy(p => p.Id),
+            _ => query.OrderBy(p => p.Price).ThenBy(p => p.Id)
+        };
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .Include(p => p.Categories)
+            .Include(p => p.Company)
+            .Include(p => p.Images)
+            .Include(p => p.Reviews)
+            // Multiple collection includes combined with Skip/Take need a split
+            // query, or paging happens on a joined, duplicated row set.
+            .AsSplitQuery()
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (items, totalCount);
+    }
+
+    public async Task<(decimal Min, decimal Max)> GetPriceRangeAsync()
+    {
+        var approved = GetAllAsQueryable().Where(p => p.Company.Status == CompanyStatus.Approved);
+
+        if (!await approved.AnyAsync())
+            return (0, 0);
+
+        var min = await approved.MinAsync(p => p.Price);
+        var max = await approved.MaxAsync(p => p.Price);
+        return (min, max);
+    }
 }

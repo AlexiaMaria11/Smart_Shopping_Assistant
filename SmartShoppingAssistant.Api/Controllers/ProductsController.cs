@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartShoppingAssistant.Api.Extensions;
+using SmartShoppingAssistant.BusinessLogic.DTOs;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
 using SmartShoppingAssistant.DataAccess.Entities;
+using SmartShoppingAssistant.DataAccess.Entities.Enums;
 
 namespace SmartShoppingAssistant.Api.Controllers
 {
@@ -22,6 +24,32 @@ namespace SmartShoppingAssistant.Api.Controllers
              int? companyId)
         {
             return Ok(await productService.GetAllAsync(categoryId, name, minPrice, maxPrice, companyId));
+        }
+
+        // The Shop catalogue: filtered, sorted and paged on the server.
+        [HttpGet("search")]
+        public async Task<ActionResult<PagedResult<ProductGetDTO>>> Search(
+            string? name,
+            [FromQuery] List<int>? categoryIds,
+            decimal? minPrice,
+            decimal? maxPrice,
+            [FromQuery] List<int>? companyIds,
+            bool? inStockOnly,
+            ProductSortOption sort = ProductSortOption.PriceAsc,
+            int page = 1,
+            int pageSize = 24)
+        {
+            page = Math.Max(1, page);
+            pageSize = Math.Clamp(pageSize, 1, 100);
+
+            return Ok(await productService.GetPagedAsync(
+                categoryIds, name, minPrice, maxPrice, companyIds, inStockOnly, sort, page, pageSize));
+        }
+
+        [HttpGet("price-range")]
+        public async Task<ActionResult<PriceRangeDTO>> GetPriceRange()
+        {
+            return Ok(await productService.GetPriceRangeAsync());
         }
 
         [Authorize(Roles = Managers)]

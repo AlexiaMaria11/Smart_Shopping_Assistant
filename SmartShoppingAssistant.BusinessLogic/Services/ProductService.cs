@@ -1,8 +1,10 @@
+using SmartShoppingAssistant.BusinessLogic.DTOs;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Product;
 using SmartShoppingAssistant.BusinessLogic.Helpers;
 using SmartShoppingAssistant.BusinessLogic.Mappers;
 using SmartShoppingAssistant.BusinessLogic.Models;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
+using SmartShoppingAssistant.DataAccess.Entities.Enums;
 using SmartShoppingAssistant.DataAccess.Repositories;
 
 namespace SmartShoppingAssistant.BusinessLogic.Services;
@@ -90,5 +92,34 @@ public class ProductService(IProductRepository productRepository, ICategoryRepos
     {
         var products = await productRepository.GetSimilarAsync(id, take);
         return products.Select(ProductMapper.ToGetDTO).ToList();
+    }
+
+    public async Task<PagedResult<ProductGetDTO>> GetPagedAsync(
+        List<int>? categoryIds,
+        string? name,
+        decimal? minPrice,
+        decimal? maxPrice,
+        List<int>? companyIds,
+        bool? inStockOnly,
+        ProductSortOption sort,
+        int page,
+        int pageSize)
+    {
+        var (items, totalCount) = await productRepository.GetPagedAsync(
+            categoryIds, name, minPrice, maxPrice, companyIds, inStockOnly, sort, page, pageSize);
+
+        return new PagedResult<ProductGetDTO>
+        {
+            Items = items.Select(ProductMapper.ToGetDTO).ToList(),
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount
+        };
+    }
+
+    public async Task<PriceRangeDTO> GetPriceRangeAsync()
+    {
+        var (min, max) = await productRepository.GetPriceRangeAsync();
+        return new PriceRangeDTO { Min = min, Max = max };
     }
 }
