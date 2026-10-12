@@ -638,6 +638,43 @@ namespace SmartShoppingAssistant.DataAccess.Migrations
                     b.ToTable("Promotions", (string)null);
                 });
 
+            modelBuilder.Entity("SmartShoppingAssistant.DataAccess.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("ProductId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("Reviews", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Reviews_Rating", "[Rating] >= 1 AND [Rating] <= 5");
+                        });
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
@@ -864,6 +901,25 @@ namespace SmartShoppingAssistant.DataAccess.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("SmartShoppingAssistant.DataAccess.Entities.Review", b =>
+                {
+                    b.HasOne("SmartShoppingAssistant.DataAccess.Entities.Product", "Product")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartShoppingAssistant.DataAccess.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SmartShoppingAssistant.DataAccess.Entities.AppUser", b =>
                 {
                     b.Navigation("CartItems");
@@ -895,6 +951,8 @@ namespace SmartShoppingAssistant.DataAccess.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("Promotions");
+
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

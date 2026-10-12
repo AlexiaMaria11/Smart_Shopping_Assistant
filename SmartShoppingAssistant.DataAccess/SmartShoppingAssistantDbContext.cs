@@ -17,6 +17,7 @@ public class SmartShoppingAssistantDbContext(DbContextOptions<SmartShoppingAssis
     public DbSet<FavoriteItem> FavoriteItems { get; set; } = null!;
     public DbSet<Order> Orders { get; set; } = null!;
     public DbSet<OrderItem> OrderItems { get; set; } = null!;
+    public DbSet<Review> Reviews { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

@@ -25,7 +25,9 @@ namespace SmartShoppingAssistant.BusinessLogic.Mappers
                     .OrderBy(i => i.SortOrder)
                     .ThenBy(i => i.Id)
                     .Select(ToImageDTO)
-                    .ToList()
+                    .ToList(),
+                AverageRating = product.Reviews.Count > 0 ? product.Reviews.Average(r => r.Rating) : null,
+                ReviewCount = product.Reviews.Count
             };
         }
 

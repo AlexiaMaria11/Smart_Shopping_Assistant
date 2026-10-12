@@ -13,7 +13,8 @@ public class ProductRepository
         GetAllAsQueryable()
             .Include(p => p.Categories)
             .Include(p => p.Company)
-            .Include(p => p.Images);
+            .Include(p => p.Images)
+            .Include(p => p.Reviews);
 
     private readonly SmartShoppingAssistantDbContext _context;
 

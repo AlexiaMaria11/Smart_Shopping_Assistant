@@ -14,5 +14,6 @@ namespace SmartShoppingAssistant.DataAccess.Entities
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
         public ICollection<Category> Categories { get; set; } = new List<Category>();
         public ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 }
