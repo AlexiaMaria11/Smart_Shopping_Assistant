@@ -15,4 +15,9 @@ public interface IOrderRepository : IRepository<Order>
     Task<bool> TryReserveStockAsync(int productId, int quantity);
     Task RestoreStockAsync(int productId, int quantity);
     Task SaveChangesAsync();
+
+    // companyId null means platform-wide (admin); otherwise scoped to one seller
+    Task<OrderStatsSummary> GetStatsAsync(int? companyId, DateTime utcNow);
+    Task<List<ProductSalesSummary>> GetTopProductsAsync(int? companyId, int take);
+    Task<List<CategorySalesSummary>> GetTopCategoriesAsync(int take);
 }

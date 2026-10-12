@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartShoppingAssistant.Api.Extensions;
 using SmartShoppingAssistant.BusinessLogic.DTOs.Order;
+using SmartShoppingAssistant.BusinessLogic.DTOs.Stats;
 using SmartShoppingAssistant.BusinessLogic.Services.Interfaces;
 using SmartShoppingAssistant.DataAccess.Entities;
 
@@ -37,6 +38,20 @@ namespace SmartShoppingAssistant.Api.Controllers
         public async Task<ActionResult<List<OrderGetDTO>>> GetAll()
         {
             return Ok(await orderService.GetAllAsync());
+        }
+
+        [Authorize(Roles = Roles.Seller)]
+        [HttpGet("seller/stats")]
+        public async Task<ActionResult<SellerStatsDTO>> GetSellerStats()
+        {
+            return Ok(await orderService.GetSellerStatsAsync(User.ToCurrentUser()));
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet("admin/stats")]
+        public async Task<ActionResult<AdminStatsDTO>> GetAdminStats()
+        {
+            return Ok(await orderService.GetAdminStatsAsync());
         }
 
         [HttpGet("{id:int}")]

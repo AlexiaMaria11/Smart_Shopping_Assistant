@@ -1,4 +1,5 @@
 using SmartShoppingAssistant.BusinessLogic.DTOs.Order;
+using SmartShoppingAssistant.BusinessLogic.DTOs.Stats;
 using SmartShoppingAssistant.BusinessLogic.Helpers;
 using SmartShoppingAssistant.BusinessLogic.Mappers;
 using SmartShoppingAssistant.BusinessLogic.Models;
@@ -165,6 +166,24 @@ public class OrderService(
         await transaction.CommitAsync();
 
         return user.IsAdmin ? OrderMapper.ToGetDTO(order) : OrderMapper.ToSellerDTO(order, companyId);
+    }
+
+    private const int TopProductsTake = 5;
+
+    public async Task<SellerStatsDTO> GetSellerStatsAsync(CurrentUser user)
+    {
+        var companyId = user.RequireCompanyId();
+        var summary = await orderRepository.GetStatsAsync(companyId, DateTime.UtcNow);
+        var topProducts = await orderRepository.GetTopProductsAsync(companyId, TopProductsTake);
+        return StatsMapper.ToSellerDTO(summary, topProducts);
+    }
+
+    public async Task<AdminStatsDTO> GetAdminStatsAsync()
+    {
+        var summary = await orderRepository.GetStatsAsync(null, DateTime.UtcNow);
+        var topProducts = await orderRepository.GetTopProductsAsync(null, TopProductsTake);
+        var topCategories = await orderRepository.GetTopCategoriesAsync(TopProductsTake);
+        return StatsMapper.ToAdminDTO(summary, topProducts, topCategories);
     }
 
     private static bool IsAllowedTransition(OrderStatus from, OrderStatus to) => (from, to) switch

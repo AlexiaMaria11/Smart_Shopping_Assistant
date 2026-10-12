@@ -1,4 +1,5 @@
 using SmartShoppingAssistant.BusinessLogic.DTOs.Order;
+using SmartShoppingAssistant.BusinessLogic.DTOs.Stats;
 using SmartShoppingAssistant.BusinessLogic.Models;
 using SmartShoppingAssistant.DataAccess.Entities.Enums;
 
@@ -13,4 +14,6 @@ public interface IOrderService
     Task<OrderGetDTO> GetAsync(int id, CurrentUser user);
     Task<OrderGetDTO> CancelAsync(int id, int userId);
     Task<OrderGetDTO> UpdateSellerStatusAsync(int id, int companyId, OrderStatus status, CurrentUser user);
+    Task<SellerStatsDTO> GetSellerStatsAsync(CurrentUser user);
+    Task<AdminStatsDTO> GetAdminStatsAsync();
 }
